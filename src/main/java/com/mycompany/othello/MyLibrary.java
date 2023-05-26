@@ -16,6 +16,8 @@ import java.util.ArrayList;
  */
 public class MyLibrary
 {
+    private static final String PATH_DEFAULT = "blueprint/fieldBlu.txt";
+    
     /**
      * Determines which action to do (write/read/duplicate file)
      * 
@@ -239,7 +241,7 @@ public class MyLibrary
         String[] strArray = null;
         ArrayList<String> next = new ArrayList();
         
-        if(existence)
+        if (existence)
         {
             int i = 0;
             
@@ -272,15 +274,64 @@ public class MyLibrary
             {
                 System.out.println("Could not read file. Error code ML-GSA-1.");
             }
-            
+
             return strArray;
         }
 
         //if the read file doens't exist, loads a default field blueprint (only added for the reversi project purposes)
         System.out.println("Such file doesn't exist. Loading a default field instead.");
-        strArray = getStringArray("/home/eduardo/www/Reversi/blueprint/fieldBlu.txt");
+
+        try
+        {
+            createFileDefaultIfNotExists();
+
+            strArray = getStringArray(PATH_DEFAULT);
+        }
+        catch (IOException e)
+        {
+            System.out.println("An error occurred.");
+        }
 
         return strArray;
+    }
+    
+    public static void createFileDefaultIfNotExists() throws IOException {
+        File newFile = new File(PATH_DEFAULT);
+
+        if (!newFile.exists())
+        {
+            createFolderDefaultIfNotExists();
+     
+            newFile.createNewFile();
+
+            System.out.println("File created: " + newFile.getPath());
+
+            ArrayList<String> data = getInitialData();
+
+            saveArrayList(data, PATH_DEFAULT);
+        }
+    }
+
+    public static ArrayList<String> getInitialData() {
+        ArrayList<String> data = new ArrayList();
+
+        data.add("true");
+        data.add("00000000");
+        data.add("00000000");
+        data.add("00000000");
+        data.add("000WB000");
+        data.add("000BW000");
+        data.add("00000000");
+        data.add("00000000");
+        data.add("00000000");
+        
+        return data;
+    }
+    
+    public static void createFolderDefaultIfNotExists() {
+        if (new File("blueprint").mkdir()) {
+            System.out.println("Directory blueprint is created");
+        }
     }
     
     public static void closeFile(BufferedReader read) {
@@ -335,13 +386,9 @@ public class MyLibrary
      */
     public static boolean checkFileExistence(String file)
     {
-       boolean existence;
-       File checkedFile = new File(file);
-       
-       existence = checkedFile.exists();
-       return existence;
+       return new File(file).exists();
     }
-   
+
     /**
      * Gets all of the file and folder names in the given folder
      * 
@@ -367,27 +414,25 @@ public class MyLibrary
        {
            fileArray = folder.listFiles();
        }
-       catch(Exception ex)
+       catch (Exception ex)
        {
            System.out.println("Ooops, there was a problem while trying to read a file. Error code: ML-GFNIF-01.");
            return fileArrayInString;
        }
        
        //loop through the array of files in the folder storing them into a variable
-       for(File file: fileArray)
+       for (File file: fileArray)
        {
-           String temp; //variable that holds a path to the file with/without a separator
+           String temp = file.getPath(); //variable that holds a path to the file with/without a separator
            //if there already are file names in a string variable, add a separator in front of the file path
-           if(!fileArrayInString.equals(""))
+           if (!fileArrayInString.equals(""))
            {
-               temp = "#" + file.getPath();
+               temp = "#" + temp;
            }
-           else
-           {
-               temp = file.getPath();
-           }
+
            fileArrayInString +=temp; //add a new value to the end of the string
        }
+
        return fileArrayInString;
     }
 }

@@ -8,16 +8,9 @@ package com.mycompany.othello;
 public class Field
 {
     private String[][] field; //the field array
-    final int FIELDSIZE; //size of the field
+    public static final int FIELDSIZE = 8; //size of the field
     private boolean firstTurn = true; //stores the player, who has the first turn after the field was loaded
-    /**
-     * Default constructor that sets the size of the field
-     */
-    public Field()
-    {
-        FIELDSIZE = 8;
-    }
-    
+
     /**
      * Sets the field
      * 
@@ -41,7 +34,7 @@ public class Field
         {
             for(int j = 0; j < FIELDSIZE; j++)
             {
-                field[i][j] = tempField[i+1].substring(j,j+1);
+                field[i][j] = tempField[i + 1].substring(j, j + 1);
             }
         }
         return field;
@@ -64,7 +57,7 @@ public class Field
     public void printField()
     {
         //loops through the field array and prints it
-        for(int i = -1; i<=field.length;i++)
+        for(int i = -1; i <= field.length; i++)
         {
             //if the array didn't start printing the field yet/finished printing it, print the coordinates on the top and on the bottom of it, else print the array contents
             if(i == -1 || i == field.length)
@@ -73,7 +66,7 @@ public class Field
             }
             else
             {
-                for(int j = 0; j<field.length;j++)
+                for(int j = 0; j < field.length; j++)
                 {
                     //prints coordinates on the left and right side of the field
                     if(j == 0)

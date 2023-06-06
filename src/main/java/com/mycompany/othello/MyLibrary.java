@@ -86,13 +86,8 @@ public class MyLibrary
      */
     public static void readFromFile(String fileName)
     {
-        boolean fileExistent;
-        String line;
-        
-        fileExistent = checkFileExistence(fileName);
-        
         //if file exists, read from it, else ask user for a new file name and try running the method again with the new name
-        if(fileExistent)
+        if(checkFileExistence(fileName))
         {
            BufferedReader read = null;
            
@@ -102,7 +97,7 @@ public class MyLibrary
                read = new BufferedReader(readStream);
                
                //print out the file contents line by line looping through it until the next line is null
-               line = read.readLine();
+               String line = read.readLine();
                while(line != null)
                {
                    System.out.println(line);
@@ -126,7 +121,7 @@ public class MyLibrary
                }
            } 
         }
-        else if(!fileExistent)
+        else
         {
            System.out.println("Such file doesn't exist.");
            readFromFile(getNewFileName());
@@ -191,7 +186,7 @@ public class MyLibrary
                }
            }
        }
-       else if(!fileExistent[1])
+       else
        {
            //if output file doens't exist, ask for a new file name, store it in a variable and try running the method with the updated output file name
            System.out.println("The output file doesn't exist. Error code ML-DF-3.");
@@ -219,7 +214,7 @@ public class MyLibrary
                 {
                     write.println(arrayToSave.get(i));
                 }
-                
+
                 write.close();
             }
         }
@@ -243,8 +238,6 @@ public class MyLibrary
         
         if (existence)
         {
-            int i = 0;
-            
             try
             {
                 FileReader readStream = new FileReader(file);
@@ -252,6 +245,8 @@ public class MyLibrary
 
                 //finds out the number of lines in the file and stores them in the arrayList
                 String nextLine = read.readLine();
+                
+                int i = 0;
                 while(nextLine != null)
                 {
                     System.out.println(nextLine);
@@ -358,26 +353,7 @@ public class MyLibrary
        newFileName = newFileNameScan.nextLine();
        return newFileName;
     }
-   
-    //    public static boolean checkFileReadability(String action, String file)
-    //    {
-    //        boolean readability;
-    //        FilePermission perm = new FilePermission(file, action);
-    //        
-    //        try
-    //        {
-    //            AccessController.checkPermission(perm);
-    //            readability = true;
-    //        }
-    //        catch(AccessControlException ex)
-    //        {
-    //            readability = false;
-    //            String newFileName = getNewFileName();
-    //            checkFileReadability(action, newFileName);
-    //            return readability;
-    //        }
-    //    }
-   
+
     /**
      * Checks if the fiven file exists
      * 
@@ -400,11 +376,9 @@ public class MyLibrary
        File folder = null;
        File[] fileArray;
        String fileArrayInString = "";
-       
-       boolean fileExistence = checkFileExistence(path);
-       
+
        //if the given folder exists, create a file object from it
-       if(fileExistence)
+       if(checkFileExistence(path))
        {
            folder = new File(path);
        }

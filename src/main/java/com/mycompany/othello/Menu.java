@@ -37,13 +37,13 @@ public class Menu
      */
     public void processUserChoice(String userChoice)
     {
-        Game game = new Game();
+        // Game game = new Game();
         switch(userChoice)
         {
-            case "1" -> game.startGame();
-            case "2" -> game.loadGame();
-            case "3" -> game.openHelp();
-            case "4" -> game.closeGame();
+            case "1" -> Game.startGame();
+            case "2" -> Game.loadGame();
+            case "3" -> Game.openHelp();
+            case "4" -> Game.closeGame();
             default -> mainMenu();
         }
         mainMenu();

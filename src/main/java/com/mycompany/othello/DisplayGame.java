@@ -4,6 +4,10 @@
  */
 package com.mycompany.othello;
 
+import java.awt.Color;
+import java.awt.Container;
+import java.awt.FlowLayout;
+import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -11,6 +15,10 @@ import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.SwingConstants;
+import javax.swing.border.EmptyBorder;
 
 /**
  *
@@ -19,25 +27,75 @@ import javax.swing.JFrame;
 public class DisplayGame extends JFrame {
     
     public JButton[][] buttons;
+    
+    private Container containerButtons;
+    private Container containerScoreboard;
+    private JLabel[] scores = {
+        new JLabel(""),
+        new JLabel("")
+    };
 
     private final String iconWhite = "images/light.png";
     private final String iconBlack = "images/dark.png";
     private final String iconLegalMove = "images/legalMoveIcon.png";
 
     public DisplayGame() {
-        createButtons();
+        createComponents();
 
+        prepareConfigurations();
+    }
+    
+    private void prepareConfigurations() {
         this.setVisible(true);
         this.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
         this.setSize(800, 800);
         this.setLocationRelativeTo(null);
     }
+    
+    private void createComponents() {
+        createPanel();
+        
+        createButtons();
+        createScoreboard();
+    }
+    
+    private void createPanel() {
+        JPanel panel = new JPanel();
+        int borderSize = 15;
 
+        panel.setBorder(new EmptyBorder(borderSize, borderSize, borderSize, borderSize));
+
+        this.setContentPane(panel);
+        this.getContentPane().setLayout(new FlowLayout());
+    }
+
+    private void createScoreboard() {
+        containerScoreboard = new Container();
+        containerScoreboard.setLayout(new GridLayout(2, 1));
+        
+        Font font = new Font(null, Font.BOLD, 18);
+        scores[0].setFont(font);
+        scores[1].setFont(font);
+        
+        containerScoreboard.add(scores[0]);
+        containerScoreboard.add(scores[1]);
+        
+        this.getContentPane().add(containerScoreboard);
+    }
+    
+    public void setScore(boolean curPlayer, String name, int score) {
+        int index = curPlayer ? 0 : 1;
+        
+        scores[index].setText(name + ": " + score);
+        this.getContentPane().repaint();
+    }
+    
     private void createButtons() {
-        buttons = new JButton[Field.FIELDSIZE][Field.FIELDSIZE];
-
+        containerButtons = new Container();
         GridLayout layout = new GridLayout(Field.FIELDSIZE,Field.FIELDSIZE);
-        this.setLayout(layout);
+        containerButtons.setLayout(layout);
+        
+        buttons = new JButton[Field.FIELDSIZE][Field.FIELDSIZE];
 
         for(int i = 0; i < Field.FIELDSIZE; i++)
         {
@@ -53,9 +111,11 @@ public class DisplayGame extends JFrame {
 //                button.setBorderPainted(false);
                 
                 buttons[i][j] = button;
-                this.add(buttons[i][j]);
+                containerButtons.add(buttons[i][j]);
             }
         }
+        
+        this.getContentPane().add(containerButtons);
     }
 
     public void setIconWithType(int x, int y, String iconType) {

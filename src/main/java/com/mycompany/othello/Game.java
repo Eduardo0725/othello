@@ -164,6 +164,9 @@ class Game
 
         black = b;
         white = w;
+        
+        displayGame.setScore(true, "White", white);
+        displayGame.setScore(false, "Black", black);
     }
     
     /**
@@ -485,6 +488,7 @@ class Game
         curPlayer = !curPlayer;
 
         reloadButtons();
+        displayCounters();
     }
     
     private static String convertNumberToCaracterPosition(int numberPosition) {

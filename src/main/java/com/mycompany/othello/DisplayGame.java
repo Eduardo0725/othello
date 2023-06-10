@@ -30,11 +30,12 @@ public class DisplayGame extends JFrame {
         this.setVisible(true);
         this.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
         this.setSize(800, 800);
+        this.setLocationRelativeTo(null);
     }
 
     private void createButtons() {
         buttons = new JButton[Field.FIELDSIZE][Field.FIELDSIZE];
-        
+
         GridLayout layout = new GridLayout(Field.FIELDSIZE,Field.FIELDSIZE);
         this.setLayout(layout);
 
@@ -42,11 +43,16 @@ public class DisplayGame extends JFrame {
         {
             for(int j = 0; j < Field.FIELDSIZE; j++)
             {
-                buttons[i][j] = new JButton();
-                buttons[i][j].setName(i + "-" + j);
+                JButton button = new JButton();
+                button.setName(i + "-" + j);
                 
-                buttons[i][j].setSize(25,25);
+                button.setSize(25,25);
                 
+//                button.setOpaque(false);
+//                button.setContentAreaFilled(false);
+//                button.setBorderPainted(false);
+                
+                buttons[i][j] = button;
                 this.add(buttons[i][j]);
             }
         }

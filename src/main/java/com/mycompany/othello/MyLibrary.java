@@ -409,4 +409,9 @@ public class MyLibrary
 
        return fileArrayInString;
     }
+    
+    public static boolean hasGameFileSaved() {
+        return !getFileNamesInFolder("savedGames/").equals("");
+    }
+    
 }

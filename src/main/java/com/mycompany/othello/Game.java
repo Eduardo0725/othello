@@ -94,6 +94,13 @@ class Game
 
     }
     
+    public static void loadFileGame(String fileToLoad) {
+        System.out.println("fileToLoad: " + fileToLoad);
+        field = fieldObj.setField(fileToLoad);
+        curPlayer = fieldObj.getFirstTurn();
+        gameFlow();
+    }
+    
     /**
      * Saves the game with the filename selected by user into a savedGames folder of the program
      * 

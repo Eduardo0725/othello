@@ -17,7 +17,6 @@ public class Othello {
      */
     public static void main(String args[])
     {
-        Menu menu = new Menu();
-        menu.mainMenu();
+        Menu.main();
     }
 }

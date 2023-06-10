@@ -189,7 +189,7 @@ public class Menu extends JFrame {
     }
     
     private void createButtonSaveGame() {
-        menuFrame.buttons.add(createButton("Iniciar jogo", "startGame"));
+        menuFrame.buttons.add(createButton("Iniciar novo jogo", "startGame"));
     }
 
     private void createButtonLoadGame() {

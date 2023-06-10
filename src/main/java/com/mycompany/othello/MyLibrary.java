@@ -292,19 +292,20 @@ public class MyLibrary
     
     public static void createFileDefaultIfNotExists() throws IOException {
         File newFile = new File(PATH_DEFAULT);
-
-        if (!newFile.exists())
+        
+        if (newFile.exists())
         {
-            createFolderDefaultIfNotExists();
-     
-            newFile.createNewFile();
-
-            System.out.println("File created: " + newFile.getPath());
-
-            ArrayList<String> data = getInitialData();
-
-            saveArrayList(data, PATH_DEFAULT);
+            return;
         }
+        
+        createFolderDefaultIfNotExists();
+     
+        newFile.createNewFile();
+        System.out.println("File created: " + newFile.getPath());
+
+        ArrayList<String> data = getInitialData();
+
+        saveArrayList(data, PATH_DEFAULT);
     }
 
     public static ArrayList<String> getInitialData() {
@@ -324,7 +325,9 @@ public class MyLibrary
     }
     
     public static void createFolderDefaultIfNotExists() {
-        if (new File("blueprint").mkdir()) {
+        File folder = new File("blueprint");
+        
+        if (!folder.exists() && folder.mkdir()) {
             System.out.println("Directory blueprint is created");
         }
     }
@@ -355,7 +358,7 @@ public class MyLibrary
     }
 
     /**
-     * Checks if the fiven file exists
+     * Checks if the given file exists
      * 
      * @param file the file to check existence of
      * @return existence represents the existence of the file
@@ -375,7 +378,7 @@ public class MyLibrary
     {
         String fileArrayInString = "";
         
-        if(!checkFileExistence(path))
+        if (!checkFileExistence(path))
         {
             if (!path.equals("savedGames/"))
             {

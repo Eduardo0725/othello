@@ -373,41 +373,35 @@ public class MyLibrary
      */
     public static String getFileNamesInFolder(String path)
     {
-       File folder = null;
-       File[] fileArray;
-       String fileArrayInString = "";
+        String fileArrayInString = "";
+        
+        if(!checkFileExistence(path))
+        {
+            if (!path.equals("savedGames/"))
+            {
+                System.out.println("Not exists folder: " + path);
+                return fileArrayInString;
+            }
 
-       //if the given folder exists, create a file object from it
-       if(checkFileExistence(path))
-       {
-           folder = new File(path);
-       }
-       
-       //try getting the list of names in that folder
-       try
-       {
-           fileArray = folder.listFiles();
-       }
-       catch (Exception ex)
-       {
-           System.out.println("Ooops, there was a problem while trying to read a file. Error code: ML-GFNIF-01.");
-           return fileArrayInString;
-       }
-       
-       //loop through the array of files in the folder storing them into a variable
-       for (File file: fileArray)
-       {
-           String temp = file.getPath(); //variable that holds a path to the file with/without a separator
-           //if there already are file names in a string variable, add a separator in front of the file path
-           if (!fileArrayInString.equals(""))
-           {
-               temp = "#" + temp;
-           }
-
-           fileArrayInString +=temp; //add a new value to the end of the string
-       }
-
-       return fileArrayInString;
+            createFolder(path);
+        }
+        
+        File folder = new File(path);
+        File[] fileArray = folder.listFiles();
+        ArrayList<String> pathList = new ArrayList();
+        
+        for (File file: fileArray)
+        {
+            pathList.add(file.getPath());
+        }
+        
+        fileArrayInString = String.join("#", pathList);
+        
+        return fileArrayInString;
+    }
+    
+    public static boolean createFolder(String path) {
+        return new File(path).mkdir();
     }
     
     public static boolean hasGameFileSaved() {

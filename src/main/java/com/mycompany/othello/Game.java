@@ -3,9 +3,7 @@ package com.mycompany.othello;
 import java.util.Scanner;
 import java.util.HashMap;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import javax.swing.JButton;
 
 /**
@@ -15,16 +13,21 @@ import javax.swing.JButton;
  */
 class Game
 {
+    private static final int[] scores = {
+        0, // White
+        0  // Black
+    };
     private static final String DEFAULTFIELD = "blueprint/fieldBlu.txt"; //the path to the field blueprint
+    
     private static Field fieldObj = new Field();
     private static String[][] field;
-    private static int black = 0; //number of black discs on the board
-    private static int white = 0; //number of white discs on the board
     private static boolean curPlayer = true; //true - current player is white, false - current player is black
+    private static boolean canChangePlayer = true;
     private static Scanner regScan = new Scanner(System.in); //scanner that is used throughout the program
     private static String winner = "UNDEFINED";  //as the game ends, stores the winner's colour
-    private static boolean surrender = false; //if someone decides to surrender, becomes true and stops the loop in gameFlow()
+    
     public static DisplayGame displayGame = new DisplayGame();
+    public static HashMap<String, Boolean> movesLeft = new HashMap();
     
     interface ForEachField {  
         public void ForEachField(int x, int y);
@@ -38,12 +41,10 @@ class Game
     {
         fieldObj = new Field();
         regScan = new Scanner(System.in);
-        black = 0;    //sets counter values
-        white = 0;    //    to 0
         curPlayer = true; //sets current player to white
-        surrender = false;
         winner = "UNDEFINED"; //sets winned to undefined as the game has just begun
         displayGame = new DisplayGame();
+        resetScores();
     }
     
     /**
@@ -104,17 +105,14 @@ class Game
     /**
      * Saves the game with the filename selected by user into a savedGames folder of the program
      * 
-     * 
      */
     public static void saveGame()
     {
-        String file;
         ArrayList<String> tempField = new ArrayList();
 
         //gets the name of the file to save game to
         System.out.println("Enter the name of the file you want to save your game in:");
-        file = regScan.nextLine();
-            
+        String file = regScan.nextLine();
             
         String currentPlayer = String.valueOf(curPlayer);   //stores current player's colour
         tempField.add(currentPlayer);                       //adds current player as the first field to the arrayList
@@ -130,7 +128,7 @@ class Game
 
             tempField.add(tempLine); //adds this string to the array
         }
-            
+        
         file = "savedGames/" + file + ".txt";
         
         //saves the current player's colour and field into a file
@@ -146,29 +144,25 @@ class Game
      */
     public static void setCounters()
     {
-        int b = 0;
-        int w = 0;
-
-        //scans the field updating the counters
-        for (String[] field1 : field) {
-            
-            for (int j = 0; j < field[0].length; j++) {
-                
-                if (field1[j].equals("B")) {
-                    b++;
-                } else if (field1[j].equals("W")) {
-                    w++;
-                }
-            }
-        }
-
-        black = b;
-        white = w;
+        resetScores();
         
-        displayGame.setScore(true, "White", white);
-        displayGame.setScore(false, "Black", black);
+        forEachField((x, y) -> {
+            if (field[x][y].equals("B")) {
+                scores[1]++;
+            } else if (field[x][y].equals("W")) {
+                scores[0]++;
+            }
+        });
+        
+        displayGame.setScore(true, "White", scores[0]);
+        displayGame.setScore(false, "Black", scores[1]);
     }
     
+    private static void resetScores() {
+        scores[0] = 0;
+        scores[1] = 0;
+    }
+
     /**
      * Exits the game
      * 
@@ -178,299 +172,11 @@ class Game
         System.exit(0);
     }
     
-    /**
-     * Opens the help text file and prints it on the screen
-     * 
-     */
-    public static void openHelp()
-    {
-        System.out.println("\u000c");
-        MyLibrary.readwriter("read", "help/help.txt");
-        System.out.println("(PRESS ENTER)");
-        regScan.nextLine();
-    }
-    
-    /**
-     * Represents the flow of the game, getting user turn inputs, processing them etc.
-     * 
-     */
-//    public static void gameFlow()
-//    {
-//        //variables that determine if the first move was already made           
-//        boolean wasFirstMove = false;   
-//        
-//        boolean skippedTurn = false; //determines of the previous turn was skipped due to lack of moves
-//        boolean validMove;   //determines if user's input was 'grammatically' correct and can be further processed by the program
-//        boolean moveLegal = false;   //determines if the user's input was a legal move, allowed by the game rules
-//        String userInput;
-//        int infinite = 0; //while it's equal to 0, loop runs. it always is equal to 0
-//        boolean gameFinished = false; //determines if the game was finished or not
-//        
-//        HashMap<String, Boolean> movesLeft = new HashMap();
-//        ArrayList<String> movesList; //stores the available moves for the current player
-//        boolean moves;      //determines if there are available moves for the current player
-//        
-//        //temporary variables used to check if the previous&current move were both skipped
-//        boolean one;
-//        boolean two;
-//        
-//        //the same as the two variables above, but not temporary
-//        movesLeft.put("White", true);
-//        movesLeft.put("Black", true);
-//        
-//        do
-//        {
-//            String colour;
-//            String opposColour;
-//            
-//            //if first move was made, update variable
-//            if(!wasFirstMove)
-//            {
-//                wasFirstMove = true;
-//            }
-//            
-//            //if both the first move was made and it was legal,  OR  if previous turn was skipped, change the current player and reset skippedTUrn variable
-//            if((wasFirstMove && moveLegal) || skippedTurn)
-//            {
-//                curPlayer = !curPlayer;
-//                skippedTurn = false;
-//                moveLegal = false;
-//            }
-//            
-//            //store current and opposite players' colours
-//            if(curPlayer)
-//            {
-//                colour = "White";
-//                opposColour = "Black";
-//            }
-//            else
-//            {
-//                colour = "Black";
-//                opposColour = "White";;
-//            }
-//                
-//            //print the field, update counters, print counters and store available moves
-//            System.out.println("\u000c");
-//            fieldObj.printField();
-//            reloadButtons();
-//            displayCounters();
-//            movesList = getAvailableMoves();
-//            
-//            //if there are available moves - print them, it there are no available moves, print an appropriate message and skip the turn
-//            if(movesList.isEmpty())
-//            {
-//                moves = false;
-//                skippedTurn = true;
-//                System.out.println(colour + " ,you don't have any moves left. Skipping turn. (press ENTER)");
-//                regScan.nextLine();
-//            }
-//            else
-//            {
-//                moves = true;
-//                int moveCount = 0; //stores the number of printed moves not to print more than 5 moves in a line, to make it more clear
-//                System.out.println("Available moves: (" + movesList.size() + ")"); //also prints the number of available moves
-//
-//                for(int i = 0; i < movesList.size(); i++)
-//                {
-//                    System.out.print(movesList.get(i)+"\t"); //prints the move
-//                    moveCount++;
-//                    
-//                    //if line contains 5 moves, print a blank line and reset the number of moves printed
-//                    if(moveCount == 5)
-//                    {
-//                        System.out.println();
-//                        moveCount = 0;
-//                    }
-//                }
-//                System.out.println("\n");
-//            }
-//            
-//            //store if there were moves left for the current player
-//            movesLeft.put(colour, moves);
-//            
-//            //if there were moves left for the current player, ask him to make a move
-//            if(movesLeft.get(colour))
-//            {
-//                System.out.println(colour + " player's turn:");
-//                userInput = regScan.nextLine();
-//                
-//                //if the user writes 'menu', open the menu, else he makes a move -> check if the input was correct and the move tha tuser is trying to make is legal
-//                if(userInput.equals("menu"))
-//                {
-//                    inGameMenu();
-//                    moveLegal = false;
-//                }
-//                else
-//                {
-//                    validMove = checkTurnInput(userInput); //move is 'gramatically' correct
-//                    if(validMove)
-//                    {
-//                        moveLegal = checkMoveLegal(userInput); //move is legal according to the game rules
-//                    }
-//                }
-//                movesLeft.put(opposColour, true); //sets the previous player turn to the default value (not skipped)
-//            }
-//            
-//            //if both previous player's turn and current player's turn was skipped, end the game
-//            one = movesLeft.get(colour);
-//            two = movesLeft.get(opposColour);
-//            if(one == false && two == false)
-//            {
-//                gameFinished = true;
-//            }
-//        }
-//        while(infinite == 0 && surrender == false && gameFinished == false);
-//        
-//        //if the game was finished, define the winner and print it
-//        if(gameFinished)
-//        {
-//            endGame();
-//        }
-//
-//        //reset the values of the variables
-//        surrender = false;
-//    }
-
     public static void gameFlow() {
-        //print the field, update counters, print counters and store available moves
-        System.out.println("\u000c");
-        fieldObj.printField();
         loadFunctionsInButtons();
         reloadButtons();
         displayCounters();
     }
-    
-    public static HashMap<String, Boolean> movesLeft = new HashMap();
-    
-//    public static void setPart(int x, int y)
-//    {
-//        //variables that determine if the first move was already made           
-//        boolean wasFirstMove = false;   
-//        
-//        boolean skippedTurn = false; //determines of the previous turn was skipped due to lack of moves
-//        boolean moveLegal = false;   //determines if the user's input was a legal move, allowed by the game rules
-//        String userInput;
-//
-//        // HashMap<String, Boolean> movesLeft = new HashMap();
-//        ArrayList<String> movesList; //stores the available moves for the current player
-//        boolean moves;      //determines if there are available moves for the current player
-//        
-//        //temporary variables used to check if the previous&current move were both skipped
-//        boolean one;
-//        boolean two;
-//        
-//        //the same as the two variables above, but not temporary
-//        if (movesLeft.isEmpty()) {
-//            movesLeft.put("White", true);
-//            movesLeft.put("Black", true);
-//        }
-//        
-//        
-//
-//            String colour;
-//            String opposColour;
-//
-//            //if first move was made, update variable
-//            if(!wasFirstMove)
-//            {
-//                wasFirstMove = true;
-//            }
-//
-//            //if both the first move was made and it was legal,  OR  if previous turn was skipped, change the current player and reset skippedTUrn variable
-//            if((wasFirstMove && moveLegal) || skippedTurn)
-//            {
-//                curPlayer = !curPlayer;
-//                skippedTurn = false;
-//                moveLegal = false;
-//            }
-//
-//            //store current and opposite players' colours
-//            if(curPlayer)
-//            {
-//                colour = "White";
-//                opposColour = "Black";
-//            }
-//            else
-//            {
-//                colour = "Black";
-//                opposColour = "White";;
-//            }
-//
-//            //print the field, update counters, print counters and store available moves
-//            System.out.println("\u000c");
-//            fieldObj.printField();
-//            reloadButtons();
-//            displayCounters();
-//            movesList = getAvailableMoves();
-//            
-//            //if there are available moves - print them, it there are no available moves, print an appropriate message and skip the turn
-//            if(movesList.isEmpty())
-//            {
-//                moves = false;
-//                skippedTurn = true;
-//                System.out.println(colour + " ,you don't have any moves left. Skipping turn. (press ENTER)");
-//                regScan.nextLine();
-//            }
-//            else
-//            {
-//                moves = true;
-//                int moveCount = 0; //stores the number of printed moves not to print more than 5 moves in a line, to make it more clear
-//                System.out.println("Available moves: (" + movesList.size() + ")"); //also prints the number of available moves
-//
-//                for(int i = 0; i < movesList.size(); i++)
-//                {
-//                    System.out.print(movesList.get(i)+"\t"); //prints the move
-//                    moveCount++;
-//                    
-//                    //if line contains 5 moves, print a blank line and reset the number of moves printed
-//                    if(moveCount == 5)
-//                    {
-//                        System.out.println();
-//                        moveCount = 0;
-//                    }
-//                }
-//                System.out.println("\n");
-//            }
-//            
-//            //store if there were moves left for the current player
-//            movesLeft.put(colour, moves);
-//            
-//            //if there were moves left for the current player, ask him to make a move
-//            if(movesLeft.get(colour))
-//            {
-//                System.out.println(colour + " player's turn:");
-//                userInput = convertNumberToCaracterPosition(x) + y;
-//                
-//                //if the user writes 'menu', open the menu, else he makes a move -> check if the input was correct and the move tha tuser is trying to make is legal
-////                if(userInput.equals("menu"))
-////                {
-////                    inGameMenu();
-////                    moveLegal = false;
-////                }
-////                else
-////                {
-//                    if(checkTurnInput(userInput))
-//                    {
-//                        moveLegal = checkMoveLegal(userInput); //move is legal according to the game rules
-//                    }
-////                }
-//                movesLeft.put(opposColour, true); //sets the previous player turn to the default value (not skipped)
-//            }
-//            
-//            //if both previous player's turn and current player's turn was skipped, end the game
-//            one = movesLeft.get(colour);
-//            two = movesLeft.get(opposColour);
-//            if(one == false && two == false)
-//            {
-//                movesLeft.put("White", true);
-//                movesLeft.put("Black", true);
-//
-//                endGame();
-//            }
-//
-//        //reset the values of the variables
-//        surrender = false;
-//    }
     
     public static void setPart(int x, int y) {
         String userInput = convertNumberToCaracterPosition(y) + (x + 1);
@@ -520,11 +226,11 @@ class Game
     }
 
     private static void reloadButtons() {
-        forEachField((i, j) -> {
-            if (field[i][j].equals("0")) {
-                displayGame.removeIcon(i, j);
+        forEachField((x, y) -> {
+            if (field[x][y].equals("0")) {
+                displayGame.removeIcon(x, y);
             } else {
-                displayGame.setIconWithType(i, j, field[i][j]);
+                displayGame.setIconWithType(x, y, field[x][y]);
             }
         });
         
@@ -532,11 +238,11 @@ class Game
     }
 
     public static void forEachField(ForEachField forEachFieldCallback) {
-        for(int i = 0; i < Field.FIELDSIZE; i++)
+        for(int x = 0; x < Field.FIELDSIZE; x++)
         {
-            for(int j = 0; j < Field.FIELDSIZE; j++)
+            for(int y = 0; y < Field.FIELDSIZE; y++)
             {
-                forEachFieldCallback.ForEachField(i, j);
+                forEachFieldCallback.ForEachField(x, y);
             }
         }
     }
@@ -573,8 +279,6 @@ class Game
         });
     }
     
-    private static boolean canChangePlayer = true;
-    
     private static void loadFunctionsInButtons() {
         for(int i = 0; i < field.length; i++)
         {
@@ -598,8 +302,6 @@ class Game
     public static void displayCounters()
     {
         setCounters();
-        System.out.println("\nWhite: " + white);
-        System.out.println("Black: " + black + "\n\n");
     }
 
     public static boolean checkTurnInput(int x, int y)
@@ -840,87 +542,13 @@ class Game
         return lineFormed;
     }
     
-    /**
-     * Displays the secondary menu and gets user menu input
-     * 
-     */
-    public static void inGameMenu()
-    {
-        String input;
-        System.out.println("\u000c");
-        System.out.println("#######################################");
-        System.out.println("#                                     #");
-        System.out.println("# 1. Back to game                     #");
-        System.out.println("# 2. Help                             #");
-        System.out.println("# 3. Surrender                        #");
-        System.out.println("# 4. Save the game                    #");
-        System.out.println("# 5. Save and exit                    #"); 
-        System.out.println("# 6. Exit the program                 #");
-        System.out.println("#                                     #");
-        System.out.println("#######################################");
-        input = regScan.nextLine();
-        
-        processInGameMenu(input); 
-    }
-    
-    /**
-     * Processes user secondary menu input
-     * 
-     * @param input represents user secondary menu input
-     */
-    public static void processInGameMenu(String input)
-    {
-        switch(input)
-        {
-            case "1":   
-                return;  //resumes the game
-            case "2":   
-                openHelp();
-                break;
-            case "3":   
-                surrender(); //surrenders the game for the current player
-                surrender = true;
-                return;
-            case "4":   
-                saveGame(); //saves the game
-                break;
-            case "5":   
-                saveGame(); //saves AND exits the game
-                surrender = true;
-                return;
-            case "6":   
-                surrender = true; // exits the game
-                return;
-            default:    
-                inGameMenu(); //reopens the main menu if the user input was invalid
-                break;
-        }
-    }
-    
-    /**
-     * Surrenders the game, displaying the winner and setting the surrender variable's value so that it will break out of gameFlow infinite loop and return to main menu
-     * 
-     */
-    public static void surrender()
-    {
-        surrender = true;
-        String colour = curPlayer ? "Black" : "White";
-
-        System.out.println("\u000c");
-        fieldObj.printField();
-        displayCounters();
-        System.out.println(colour + " wins.\n(PRESS ENTER)");
-
-        regScan.nextLine(); //waits until user presses enter to let him appreciate his victory and view the field
-    }
-    
     public static String getWinner() {
-        if(black > white)
+        if(scores[1] > scores[0])
         {
             return "black";
         }
 
-        if(white > black)
+        if(scores[0] > scores[1])
         {
             return "white";
         }

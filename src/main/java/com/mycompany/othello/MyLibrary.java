@@ -249,7 +249,6 @@ public class MyLibrary
                 int i = 0;
                 while(nextLine != null)
                 {
-                    System.out.println(nextLine);
                     i++;
                     next.add(nextLine);
                     nextLine = read.readLine();

@@ -27,9 +27,15 @@ public class MyLibrary
     public static void readwriter(String action, String file)
     {
         switch (action) {
-            case "print" -> writeInFile(file);
-            case "read" -> readFromFile(file);
-            case "duplicate" -> duplicateFile(file);
+            case "print":
+                writeInFile(file);
+                break;
+            case "read":
+                readFromFile(file);
+                break;
+            case "duplicate":
+                duplicateFile(file);
+                break;
         }
     }
     

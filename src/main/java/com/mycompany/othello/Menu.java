@@ -48,10 +48,17 @@ public class Menu extends JFrame {
 
         switch(userChoice)
         {
-            case "startGame" -> Game.startGame();
-            case "loadGame" -> changeGameFileVisible(true);
-            case "closeGame" -> Game.closeGame();
-            default -> menuFrame.setVisible(true);
+            case "startGame":
+                Game.startGame();
+                break;
+            case "loadGame":
+                changeGameFileVisible(true);
+                break;
+            case "closeGame":
+                Game.closeGame();
+                break;
+            default:
+                menuFrame.setVisible(true);
         }
     }
     

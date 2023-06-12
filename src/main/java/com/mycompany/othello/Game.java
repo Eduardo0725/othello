@@ -198,31 +198,49 @@ class Game
     }
     
     private static String convertNumberToCaracterPosition(int numberPosition) {
-        return switch (numberPosition) {
-            case 0 -> "a";
-            case 1 -> "b";
-            case 2 -> "c";
-            case 3 -> "d";
-            case 4 -> "e";
-            case 5 -> "f";
-            case 6 -> "g";
-            case 7 -> "h";
-            default -> "UNDEFINED";
-        };
+        switch (numberPosition) {
+            case 0:
+                return "a";
+            case 1:
+                return "b";
+            case 2:
+                return "c";
+            case 3:
+                return "d";
+            case 4:
+                return "e";
+            case 5:
+                return "f";
+            case 6:
+                return "g";
+            case 7:
+                return "h";
+        }
+        
+        return "UNDEFINED";
     }
     
     private static int convertCaracterToNumberPosition(String charPosition) {
-        return switch (charPosition) {
-            case "a" -> 0;
-            case "b" -> 1;
-            case "c" -> 2;
-            case "d" -> 3;
-            case "e" -> 4;
-            case "f" -> 5;
-            case "g" -> 6;
-            case "h" -> 7;
-            default -> 10000;
-        };
+        switch (charPosition) {
+            case "a": 
+                return 0;
+            case "b": 
+                return 1;
+            case "c": 
+                return 2;
+            case "d": 
+                return 3;
+            case "e": 
+                return 4;
+            case "f": 
+                return 5;
+            case "g": 
+                return 6;
+            case "h": 
+                return 7;
+        }
+        
+        return 10000;
     }
 
     private static void reloadButtons() {
@@ -402,17 +420,7 @@ class Game
                         {
                             //the horizontal coordinate transformed into letter
                             //assign a letter value to a horizontal coordinate
-                            String letterH = switch (tempH) {
-                                case 0 -> "a";
-                                case 1 -> "b";
-                                case 2 -> "c";
-                                case 3 -> "d";
-                                case 4 -> "e";
-                                case 5 -> "f";
-                                case 6 -> "g";
-                                case 7 -> "h";
-                                default -> "UNDEFINED";
-                            };
+                            String letterH = convertNumberToCaracterPosition(tempH);
                             num = tempV + 1;  //increase a vertical coordinate by one (the first line on the field presented to user is 1st line, but in the field array it's 0th)
                             moves.add(letterH+num); //stores a move
                             break;

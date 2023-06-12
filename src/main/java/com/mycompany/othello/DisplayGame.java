@@ -53,8 +53,8 @@ public class DisplayGame extends JFrame {
     private void createComponents() {
         createPanel();
         
-        createButtons();
         createScoreboard();
+        createButtons();
     }
     
     private void createPanel() {
@@ -121,11 +121,17 @@ public class DisplayGame extends JFrame {
         String iconPath = "";
         
         switch (iconType) {
-            case "white" -> iconPath = iconWhite;
-            case "w" -> iconPath = iconWhite;
-            case "black" -> iconPath = iconBlack;
-            case "b" -> iconPath = iconBlack;
-            case "legal_move" -> iconPath = iconLegalMove;
+            case "white": 
+            case "w":
+                iconPath = iconWhite;
+                break;
+            case "black":
+            case "b":
+                iconPath = iconBlack;
+                break;
+            case "legal_move":
+                iconPath = iconLegalMove;
+                break;
         }
         
         if (iconPath.equals("")) {

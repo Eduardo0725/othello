@@ -48,15 +48,12 @@ public class MyLibrary
     {
        String userInput;
        
-       PrintWriter write = null;
-       Scanner doggie = null;
-       
        //try creating a stream, writing into file. if failed, print the error message
        try
        {
            FileOutputStream writeStream = new FileOutputStream(fileName);
-           write = new PrintWriter(writeStream);
-           doggie = new Scanner(System.in);
+           PrintWriter write = new PrintWriter(writeStream);
+           Scanner doggie = new Scanner(System.in);
            
            //save user inputs in a file until he inputs a blank line
            userInput = doggie.nextLine();
@@ -65,23 +62,13 @@ public class MyLibrary
                write.println(userInput);
                userInput = doggie.nextLine();
            }
+           
+           write.close();
+           doggie.close();
        }
        catch(IOException ex)
        {
            System.out.println("Could not read the file. Error code RW-wIF-1");
-       }
-       finally
-       {
-           //close file and scaller
-           if(write != null)
-           {
-               write.close();
-           }
-           
-           if(doggie != null)
-           {
-               doggie.close();
-           }
        }
     }
    

@@ -64,16 +64,20 @@ public class DisplayGame extends JFrame {
         panel.setBorder(new EmptyBorder(borderSize, borderSize, borderSize, borderSize));
 
         this.setContentPane(panel);
-        this.getContentPane().setLayout(new FlowLayout());
+        FlowLayout layout = new FlowLayout();
+        layout.setAlignment(FlowLayout.LEFT);
+        this.getContentPane().setLayout(layout);
     }
 
     private void createScoreboard() {
         containerScoreboard = new Container();
-        containerScoreboard.setLayout(new GridLayout(2, 1));
+        containerScoreboard.setLayout(new GridLayout(1, 2));
         
         Font font = new Font(null, Font.BOLD, 18);
         scores[0].setFont(font);
         scores[1].setFont(font);
+        
+        scores[1].setBorder(new EmptyBorder(0, 20, 0, 0));
         
         containerScoreboard.add(scores[0]);
         containerScoreboard.add(scores[1]);

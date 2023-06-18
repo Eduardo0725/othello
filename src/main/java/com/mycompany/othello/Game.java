@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.ArrayList;
 import java.awt.event.ActionEvent;
 import javax.swing.JButton;
+import javax.swing.JOptionPane;
 
 /**
  * Contains methods regarding the flow of the game
@@ -25,6 +26,7 @@ class Game
     private static boolean canChangePlayer = true;
     private static Scanner regScan = new Scanner(System.in); //scanner that is used throughout the program
     private static String winner = "UNDEFINED";  //as the game ends, stores the winner's colour
+    private static String currentFileGame = null;
     
     public static DisplayGame displayGame = new DisplayGame();
     public static HashMap<String, Boolean> movesLeft = new HashMap();
@@ -53,6 +55,8 @@ class Game
      */
     public static void startGame()
     {
+    	currentFileGame = null;
+    	
         field = fieldObj.setField(DEFAULTFIELD);
         curPlayer = fieldObj.getFirstTurn();
         gameFlow();
@@ -97,6 +101,7 @@ class Game
     
     public static void loadFileGame(String fileToLoad) {
         System.out.println("fileToLoad: " + fileToLoad);
+        currentFileGame = fileToLoad;
         field = fieldObj.setField(fileToLoad);
         curPlayer = fieldObj.getFirstTurn();
         gameFlow();
@@ -111,9 +116,12 @@ class Game
         ArrayList<String> tempField = new ArrayList();
 
         //gets the name of the file to save game to
-        System.out.println("Enter the name of the file you want to save your game in:");
-        String file = regScan.nextLine();
-            
+        String file = currentFileGame;
+        if (file == null) {
+        	String[] files = MyLibrary.getFileNamesInFolder("savedGames/").split("#");
+            file = "savedGames/file" + (files.length + 1) + ".txt";
+        };
+                    
         String currentPlayer = String.valueOf(curPlayer);   //stores current player's colour
         tempField.add(currentPlayer);                       //adds current player as the first field to the arrayList
         
@@ -128,14 +136,13 @@ class Game
 
             tempField.add(tempLine); //adds this string to the array
         }
-        
-        file = "savedGames/" + file + ".txt";
-        
+                
         //saves the current player's colour and field into a file
         MyLibrary.saveArrayList(tempField,file);
-        System.out.println("Game successfully saved. (press ENTER)");
+        currentFileGame = file;
+        System.out.println("Game successfully saved. Filename: " + file);
         
-        regScan.nextLine();
+        JOptionPane.showMessageDialog(null, "Jogo salvo com sucesso!", "Aviso", JOptionPane.INFORMATION_MESSAGE);
     }
     
     /**

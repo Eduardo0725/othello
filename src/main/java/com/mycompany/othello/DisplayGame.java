@@ -8,7 +8,10 @@ import java.awt.Container;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.EventListener;
+
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -27,6 +30,7 @@ public class DisplayGame extends JFrame {
     
     private Container containerButtons;
     private Container containerScoreboard;
+    private Container containerSaveButton;
 
     private final JLabel[] scores = {
         new JLabel(""),
@@ -55,6 +59,7 @@ public class DisplayGame extends JFrame {
         
         createScoreboard();
         createButtons();
+        createSaveButton();
     }
     
     private void createPanel() {
@@ -67,6 +72,22 @@ public class DisplayGame extends JFrame {
         FlowLayout layout = new FlowLayout();
         layout.setAlignment(FlowLayout.LEFT);
         this.getContentPane().setLayout(layout);
+    }
+    
+    private void createSaveButton() {
+    	FlowLayout layout = new FlowLayout();
+        layout.setAlignment(FlowLayout.LEFT);
+        
+    	containerSaveButton = new Container();
+    	containerSaveButton.setLayout(layout);
+    	
+    	JButton saveButton = new JButton("Salvar");
+    	saveButton.addActionListener((ActionEvent evt) -> {
+    		Game.saveGame();
+    	});
+    	containerSaveButton.add(saveButton);
+    	
+    	this.getContentPane().add(containerSaveButton);   	
     }
 
     private void createScoreboard() {

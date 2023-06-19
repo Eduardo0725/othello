@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- */
-
 package com.mycompany.othello;
 
 /**
@@ -12,13 +8,10 @@ package com.mycompany.othello;
  * PITER MALHEIROS FANTI                - RA: 125111353595
  * VICTÓRIA SOUZA DIAS                 	- RA: 12523157176
  */
-public class Othello {
 
-    /**
-     * Opens the main menu and starts the whole process.
-     * 
-     * @param args
-     */
+//Classe que inicializa o jogo com seu método main
+public class Othello {
+	
     public static void main(String args[])
     {
         Menu.main();

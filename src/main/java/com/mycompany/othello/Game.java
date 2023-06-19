@@ -8,8 +8,6 @@ import javax.swing.JButton;
 import javax.swing.JOptionPane;
 
 /**
- * Contains methods regarding the flow of the game
- *
  * @author EDUARDO ANDRADE CARVALHO     - RA: 125111371662
  * JHONATAS VIEIRA DA SILVA SANTOS 		- RA: 125111350221
  * THIAGO REIS CARDOSO                	- RA: 125111366586
@@ -17,13 +15,19 @@ import javax.swing.JOptionPane;
  * PITER MALHEIROS FANTI                - RA: 125111353595
  * VICTÓRIA SOUZA DIAS                 	- RA: 12523157176
  */
+
+/*Classe que processa o fluxo do jogo, nela iniciamos a matriz posicional do tabuleiro pelo DEFAULTFIELD com a blueprint de um tabuleiro
+ *inicial com as peças brancas e pretas intercaladas no meio da matriz e com os outros campos zerados, depoisdefinimos o objeto de 
+ *fieldObj como o tabuleiro e o field como suas posições, seguindo pelo indicador de jogador atual e o de troca de jogador para após um movimento.
+ *O Scanner é definido para que receba os movimentos dos jogadores e o currentFileGame que nos permite salvar novo jogo ou sobreescrever o antigo.
+ */
 class Game
 {
     private static final int[] scores = {
-        0, // White
-        0  // Black
+        0, // Peças brancas marcadas como W de "White"
+        0  // Peças pretas  marcadas como B de "Black"
     };
-    private static final String DEFAULTFIELD = "blueprint/fieldBlu.txt"; //the path to the field blueprint
+    private static final String DEFAULTFIELD = "blueprint/fieldBlu.txt"; //Caminho para a blueprint de início de partida
     
     private static Field fieldObj = new Field();
     private static String[][] field;
@@ -40,23 +44,23 @@ class Game
         public void ForEachField(int x, int y);
     }
 
-    /**
-     * Default constructor, initializes class fields
-     * 
+    /*Inicializa os parâmetros da classe, criando novo tabuleiro, novo scanner para receber os movimentos,
+     *definindo o jogador atual (TRUE peças brancas e FALSE peças pretas), e dando Display no jogo com a 
+     *criação das janelas definidas em DisplayGame e zerando as pontuações.
      */
     public static void resetValues()
     {
         fieldObj = new Field();
         regScan = new Scanner(System.in);
-        curPlayer = true; //sets current player to white
-        winner = "UNDEFINED"; //sets winned to undefined as the game has just begun
+        curPlayer = true; 
+        winner = "UNDEFINED"; 
         displayGame = new DisplayGame();
         resetScores();
     }
     
-    /**
-     * Starts the game loading the game field, settings starting discs and sets the first player to white
-     * 
+    /*Inicia o jogo novo conforme classe Menu processando a escolha de jogo do usuário
+     * iniciando novo tabuleiro padrão, definindo o jogador do novo turno e deixando nulo 
+     * o currentFileGame para poder-se criar um novo arquivo de jogo salvo
      */
     public static void startGame()
     {
@@ -67,32 +71,35 @@ class Game
         gameFlow();
     }
     
-    /**
-     * Loads the game from file selected by user
-     * 
+    /*Carrega o jogo salvo em formato de texto conforme classe Menu processando a escolha de jogo do usuário
+     * iniciando o tabuleiro registrado no .txt, definindo o jogador do turno atual, baseado no último movimento
+     * e deixando nulo o currentFileGame para poder criar um novo arquivo de jogo salvo
      */
     public static void loadGame()
     {        
-        String[] fileArray = MyLibrary.getFileNamesInFolder("savedGames/"); //splits passed file names into separate paths
+        String[] fileArray = MyLibrary.getFileNamesInFolder("savedGames/");
         
+        //****************************************************************************
         if(fileArray.length == 1 && fileArray[0].equals(""))
         {
-            System.out.println("No available save files... (press ENTER to get back to the main menu)"); //happens if there are no available files in that folder
+            System.out.println("No available save files... (press ENTER to get back to the main menu)"); 
             regScan.nextLine();
             return;
         }
 
         System.out.println("Available save files:");    
+        //*****************************************************************************
         
-        for(int i = 0; i < fileArray.length; i++)       //loops through the array
+        //****************************************************************************
+        for(int i = 0; i < fileArray.length; i++)       
         {                                               
-            String temp = fileArray[i];                 //stores the file path into a variable
-            temp = temp.replace("savedGames\\", "");    //cuts the unnecessary parts of the path (folder name and
-            temp = temp.replace(".txt", "");            //.txt format)
-            System.out.println(temp);                   //prints off the formatted file name
+            String temp = fileArray[i];                 
+            temp = temp.replace("savedGames\\", "");    
+            temp = temp.replace(".txt", "");            
+            System.out.println(temp);                   
         }
         
-        //gets user input, adds the folder name and the .txt format and gets a field array from the field object, sets current player according to the save file
+        //******************************************************************************
         System.out.println("\nWhich save file to load:");  
         String fileToLoad = regScan.nextLine();
         fileToLoad = "savedGames/" + fileToLoad + ".txt";
@@ -100,9 +107,9 @@ class Game
         field = fieldObj.setField(fileToLoad);
         curPlayer = fieldObj.getFirstTurn();
         gameFlow();
-
     }
     
+    //****************************************************************************
     public static void loadFileGame(String fileToLoad) {
         System.out.println("fileToLoad: " + fileToLoad);
         currentFileGame = fileToLoad;
@@ -110,38 +117,30 @@ class Game
         curPlayer = fieldObj.getFirstTurn();
         gameFlow();
     }
-    
-    /**
-     * Saves the game with the filename selected by user into a savedGames folder of the program
-     * 
-     */
+    //****************************************************************************
     public static void saveGame()
     {
         ArrayList<String> tempField = new ArrayList();
 
-        //gets the name of the file to save game to
         String file = currentFileGame;
         if (file == null) {
         	String[] files = MyLibrary.getFileNamesInFolder("savedGames/");
             file = "savedGames/file" + (files.length + 1) + ".txt";
         };
                     
-        String currentPlayer = String.valueOf(curPlayer);   //stores current player's colour
-        tempField.add(currentPlayer);                       //adds current player as the first field to the arrayList
+        String currentPlayer = String.valueOf(curPlayer);   
+        tempField.add(currentPlayer);                       
         
-        //stores the whole field into an array
         for (String[] field1 : field) {
             String tempLine = "";
 
-            //transforms the row of values of a 2d array into a single string
             for (int j = 0; j < field[0].length; j++) {
                 tempLine += field1[j];
             }
 
-            tempField.add(tempLine); //adds this string to the array
+            tempField.add(tempLine); 
         }
                 
-        //saves the current player's colour and field into a file
         MyLibrary.saveArrayList(tempField,file);
         currentFileGame = file;
         System.out.println("Game successfully saved. Filename: " + file);
@@ -149,10 +148,7 @@ class Game
         JOptionPane.showMessageDialog(null, "Jogo salvo com sucesso!", "Aviso", JOptionPane.INFORMATION_MESSAGE);
     }
     
-    /**
-     * Sets and updates the counters for the number of white/black discs on the board
-     * 
-     */
+    
     public static void setCounters()
     {
         resetScores();
@@ -174,10 +170,7 @@ class Game
         scores[1] = 0;
     }
 
-    /**
-     * Exits the game
-     * 
-     */
+    
     public static void closeGame()
     {
         System.exit(0);
@@ -325,9 +318,7 @@ class Game
         }
     }
     
-    /**
-     * Updates and prints the counters for the number of white/black discs on the board
-     */
+    
     public static void displayCounters()
     {
         setCounters();
@@ -344,12 +335,7 @@ class Game
         return true;
     }
     
-    /**
-     * Checks if the user's turn was legal according to the game rules
-     * 
-     * @param place represents the user turn input
-     * @return moveLegal tells if the move was legal or not
-     */
+    
     public static boolean checkMoveLegal(String place)
     {
         String letter = place.substring(0,1).toLowerCase();
@@ -392,48 +378,36 @@ class Game
         return directions;
     }
 
-    /**
-     * if player is trying to put a disc onto an empty tile, check if the move is legal, else move is not legal
-     */
+    
     public static boolean canPutDisc(String position)
     {
         return position.equals("0");
     }
     
-    /**
-     * Finds and returns a list of available moves for the current player
-     * 
-     * @return moves the list of legals move available for the current player
-     */
+    
     public static ArrayList<String> getAvailableMoves()
     {
         ArrayList<String> moves = new ArrayList(); //stores the available moves
         String playerColour = curPlayer ? "W" : "B";
-        int num; //stores a vertical coordinate of the line displayed to user
-        boolean[] directions = new boolean[8]; //used to check if the appropriate lines form in different directions
+        int num; 
+        boolean[] directions = new boolean[8]; 
 
-        //loops through each tile on the field (field array), checking if the lines form
+        
         for(int tempV = 0; tempV < field.length; tempV++)
         {
             for(int tempH = 0; tempH < field[0].length; tempH++)
-            {
-                //if the line is unoccupied by discs, placing a disc on it would be a valid move, else does nothing
+            {                
                 if(field[tempV][tempH].equals("0"))
-                {
-                    //checks if placing a disc on that tile would make a line form for each direction
+                {                    
                     directions = getDirectionsOfPosition(tempV, tempH, playerColour, "check");
-                    
-                    //loops through the directions and checks if line is formed in any of these directions thus making a move legal
+                                       
                     for(int i = 0; i < directions.length; i++)
                     {
-                        //if the move is legal, transform it in a format, understandable to user
                         if(directions[i] == true)
                         {
-                            //the horizontal coordinate transformed into letter
-                            //assign a letter value to a horizontal coordinate
                             String letterH = convertNumberToCaracterPosition(tempH);
-                            num = tempV + 1;  //increase a vertical coordinate by one (the first line on the field presented to user is 1st line, but in the field array it's 0th)
-                            moves.add(letterH+num); //stores a move
+                            num = tempV + 1;  
+                            moves.add(letterH+num); 
                             break;
                         }
                     }
@@ -444,33 +418,20 @@ class Game
         return moves;
     }
     
-    /**
-     * Checks if user's turn will form a valid line of discs that can be flipped
-     * 
-     * @param vertPos represents the vertical position of the tile to be checked
-     * @param horPos represents the horizontal position of the tile to be checked
-     * @param direction represents the direction in which to check if the line will be formed
-     * @param playerColor represents the symbol of the current player ("W" for white, "B" for black)
-     * @param action tells the method whether to check if both the move is legal and flip the discs, or just check if the move is legal
-     * 
-     * @return lineFormed represents the legality of the move
-     */
+    
     public static boolean checkValidLineFormed(int vertPos, int horPos, String direction, String playerColor, String action)    
     {
-        boolean lineFormed = false; //value that is being returned
-        int infinity = 0; //is always equal to 0
-        
-        //makes the method work properly and each time it's called to start from the beginning (sometimes, it beginned from the middle without the loop, i don't know why).
+        boolean lineFormed = false; 
+        int infinity = 0; 
+                
         while(infinity == 0)
         {
-            int deltaH = 0; //distance by which horizontal coordinate will be changed each time
-            int deltaV = 0; //distance by which vertical coordinate will be changed each time
-            int tempH = horPos; //temporary tile horizontal position
-            int tempV = vertPos;//temporary tile vertical position
+            int deltaH = 0; 
+            int deltaV = 0; 
+            int tempH = horPos; 
+            int tempV = vertPos;
             
-            //sets the delta variables according to the direction of the line checked
-
-            switch (direction) {
+             switch (direction) {
                 case "up":
                     deltaV = -1;
                     break;
@@ -506,7 +467,6 @@ class Game
             tempH += deltaH;
             tempV += deltaV;
 
-            //if the next tile in the line is within the field bounds and is opposite player's colour, start checking the line, else no valid line can be formed in that direction
             if(
                 true
                 && tempH >= 0 
@@ -517,11 +477,8 @@ class Game
                 && !field[tempV][tempH].equals("0")
             )
             {                
-                //while the tiles are within the bonds, check the tiles
                 while(tempV >= 0 && tempV < field.length && tempH >= 0 && tempH < field[0].length)
                 {
-                    //if the next tile of the line is empty, no valid lime can be formed in that direction, else if next tile contains an opponent's disc, a valid line was formed
-                    //and then break out of loop, if neither of these two happened, check the next tile
                     if(field[tempV][tempH].equals("0"))
                     {
                         lineFormed = false;
@@ -540,19 +497,17 @@ class Game
                     
             }
             
-            //if line was formed and the command to the method was equal to 'domove', flip discs
             if(lineFormed == true && action.equals("domove"))
             {
-                //go backwards, subtracting delta variables from temporary variables until the coordinates are equal to the line beginning coordinates
                 while(tempV != vertPos || tempH != horPos)
                 {
-                    field[tempV][tempH] = playerColor; //flips the disc
+                    field[tempV][tempH] = playerColor; 
                     
                     tempH -= deltaH;
                     tempV -= deltaV;
                 }
 
-                field[vertPos][horPos] = playerColor; // put a new disc on the appropriate tile of the board
+                field[vertPos][horPos] = playerColor; 
             }
 
             return lineFormed;
@@ -575,10 +530,6 @@ class Game
         return "tie";
     }
     
-    /**
-     * Ends the game stating the winner and getting beck to the main menu
-     * 
-     */
     public static void endGame()
     {
         winner = getWinner();

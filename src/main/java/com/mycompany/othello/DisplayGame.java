@@ -49,7 +49,7 @@ public class DisplayGame extends JFrame {
     private final String iconBlack = "images/dark.png";
     private final String iconLegalMove = "images/legalMoveIcon.png";
 
-    //Construtor da classe DisplayGame com os métodos de componentes e de configurações iniciais
+    //Construtor da classe DisplayGame com os métodos de componentes e de configurações iniciais que a compõem
     public DisplayGame() {
         createComponents();
 
@@ -114,7 +114,7 @@ public class DisplayGame extends JFrame {
     	this.getContentPane().add(containerSaveButton);   	
     }
 
-    //Cria a tabela de score para cada jogador   
+    //Cria a tabela de score para cada jogador, define a fonte e tamanho da escrita
     private void createScoreboard() {
         containerScoreboard = new Container();
         containerScoreboard.setLayout(new GridLayout(1, 2));
@@ -131,7 +131,7 @@ public class DisplayGame extends JFrame {
         this.getContentPane().add(containerScoreboard);
     }
     
-    //Atualiza a pontuação de cada jogador sendo o primeiro o jogador que iniciou o jogo
+    //Atualiza a pontuação de cada jogador
     public void setScore(boolean curPlayer, String name, int score) {
         int index = curPlayer ? 0 : 1;
         
@@ -139,7 +139,7 @@ public class DisplayGame extends JFrame {
         this.getContentPane().repaint();
     }
     
-    //Cria os botões do tabuleiro habilitando a interação para posicionar as peças
+    //Cria os botões do tabuleiro 8x8 habilitando a interação para posicionar as peças
     private void createButtons() {
         containerButtons = new Container();
         GridLayout layout = new GridLayout(Field.FIELDSIZE,Field.FIELDSIZE);
@@ -173,7 +173,7 @@ public class DisplayGame extends JFrame {
       button.setBorderPainted(false);	
     }
 
-    //Cria método de 
+    //Método de colocar os ícones das peças de cada cor e de movimentos válidos com a interface gráfica
     public void setIconWithType(int x, int y, String iconType) {
         iconType = iconType.toLowerCase();
         String iconPath = "";
@@ -200,10 +200,12 @@ public class DisplayGame extends JFrame {
         buttons[x][y].setIcon(icon);
     }
     
+    //Remove ícones quando campo não tiver recebido movimentos deixando apenas os botões do tabuleiro
     public void removeIcon(int x, int y) {
         buttons[x][y].setIcon(null);
     }
     
+    //Permite selecionar os botões do tabuleiro, se a jogada é válida na classe Game, permitirá receber o movimento
     public void setEventButton(int x, int y, ActionListener actionListener) {
         buttons[x][y].addActionListener(actionListener);
     }

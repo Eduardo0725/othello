@@ -10,8 +10,6 @@ import java.util.Scanner;
 import java.util.ArrayList;
 
 /**
- * Contains methods to write to file or read from file, check file existence, get the list of files in a folder
- * 
  * @author EDUARDO ANDRADE CARVALHO     - RA: 125111371662
  * JHONATAS VIEIRA DA SILVA SANTOS 		- RA: 125111350221
  * THIAGO REIS CARDOSO                	- RA: 125111366586
@@ -23,12 +21,6 @@ public class MyLibrary
 {
     private static final String PATH_DEFAULT = "blueprint/fieldBlu.txt";
     
-    /**
-     * Determines which action to do (write/read/duplicate file)
-     * 
-     * @param action represents the action to do with the file
-     * @param file represents the file to do action to
-     */
     public static void readwriter(String action, String file)
     {
         switch (action) {
@@ -44,23 +36,16 @@ public class MyLibrary
         }
     }
     
-    /**
-     * Asks for user input and stores it into a file
-     * 
-     * @param fileName represents a file to write information into
-     */
     public static void writeInFile(String fileName)
     {
        String userInput;
        
-       //try creating a stream, writing into file. if failed, print the error message
        try
        {
            FileOutputStream writeStream = new FileOutputStream(fileName);
            PrintWriter write = new PrintWriter(writeStream);
            Scanner doggie = new Scanner(System.in);
            
-           //save user inputs in a file until he inputs a blank line
            userInput = doggie.nextLine();
            while(!userInput.equals(""))
            {
@@ -77,14 +62,8 @@ public class MyLibrary
        }
     }
    
-    /**
-     * Reads from file and outputs information on the screen
-     * 
-     * @param fileName represents a file to read information from
-     */
     public static void readFromFile(String fileName)
     {
-        //if file exists, read from it, else ask user for a new file name and try running the method again with the new name
         if(checkFileExistence(fileName))
         {
            BufferedReader read = null;
@@ -94,7 +73,6 @@ public class MyLibrary
                FileReader readStream = new FileReader(fileName);
                read = new BufferedReader(readStream);
                
-               //print out the file contents line by line looping through it until the next line is null
                String line = read.readLine();
                while(line != null)
                {
@@ -108,7 +86,6 @@ public class MyLibrary
            }
            finally
            {
-               //close file
                try
                {
                    read.close();
@@ -132,7 +109,6 @@ public class MyLibrary
        boolean[] fileExistent = new boolean[2];
        String copiedLine;
        
-       //separates input file path from output file path and stores them into an array
        String[] file = fileName.split("<>"); //INPUT THEN OUTPUT
        
        fileExistent[1] = checkFileExistence(file[1]);
@@ -142,7 +118,6 @@ public class MyLibrary
            BufferedReader read = null;
            PrintWriter write = null;
            
-           //establishes necessary streams of data and copies file contents
            try
            {
                FileReader readStream = new FileReader(file[1]);
@@ -151,7 +126,6 @@ public class MyLibrary
                FileOutputStream writeStream = new FileOutputStream(file[0]);
                write = new PrintWriter(writeStream);
                
-               //copies file contents looping through the output file line by line and printing it to a second file
                copiedLine = read.readLine();
                while(copiedLine != null)
                {
@@ -165,7 +139,6 @@ public class MyLibrary
            }
            finally
            {
-               //closes the files
                try
                {
                    read.close();
@@ -182,7 +155,6 @@ public class MyLibrary
        }
        else
        {
-           //if output file doens't exist, ask for a new file name, store it in a variable and try running the method with the updated output file name
            System.out.println("The output file doesn't exist. Error code ML-DF-3.");
            String newNames = file[0] + getNewFileName();
            duplicateFile(newNames);
@@ -192,13 +164,11 @@ public class MyLibrary
     
     public static void saveArrayList(ArrayList arrayToSave, String file)
     {
-        //prints the ArrayList contents into a file
         try
         {
             FileOutputStream writeStream = new FileOutputStream(file);
 
             try (PrintWriter write = new PrintWriter(writeStream)) {
-                //loops through the ArrayList saving its contents to a file line by line
                 for(int i = 0; i < arrayToSave.size(); i++)
                 {
                     write.println(arrayToSave.get(i));
@@ -227,7 +197,6 @@ public class MyLibrary
                 FileReader readStream = new FileReader(file);
                 BufferedReader read = new BufferedReader(readStream);
 
-                //finds out the number of lines in the file and stores them in the arrayList
                 String nextLine = read.readLine();
                 
                 int i = 0;
@@ -238,14 +207,12 @@ public class MyLibrary
                     nextLine = read.readLine();
                 }
                 
-                //creates an array of the appropriate size to store all lines in it and loops through it storing the ArrayList values
                 strArray = new String[i];
                 for(int x = 0; x < strArray.length; x++)
                 {
                     strArray[x] = next.get(x);
                 }
                 
-                //closes the file
                 closeFile(read);
             }
             catch(IOException ex)
@@ -256,7 +223,6 @@ public class MyLibrary
             return strArray;
         }
 
-        //if the read file doens't exist, loads a default field blueprint (only added for the reversi project purposes)
         System.out.println("Such file doesn't exist. Loading a default field instead.");
 
         try

@@ -1,8 +1,6 @@
 package com.mycompany.othello;
 
 /**
- * Contains methods to store and print the field
- * 
  * @author EDUARDO ANDRADE CARVALHO     - RA: 125111371662
  * JHONATAS VIEIRA DA SILVA SANTOS 		- RA: 125111350221
  * THIAGO REIS CARDOSO                	- RA: 125111366586
@@ -10,29 +8,26 @@ package com.mycompany.othello;
  * PITER MALHEIROS FANTI                - RA: 125111353595
  * VICTÓRIA SOUZA DIAS                 	- RA: 12523157176
  */
+
+//Classe que define o tamanho do tabuleiro por meio de uma matriz definindo-a como 8x8
 public class Field
 {
-    private String[][] field; //the field array
-    public static final int FIELDSIZE = 8; //size of the field
-    private boolean firstTurn = true; //stores the player, who has the first turn after the field was loaded
+    private String[][] field; 
+    public static final int FIELDSIZE = 8; 
+    private boolean firstTurn = true; //Define o jogador atual que inicia o jogo, sendo TRUE as peças brancas e FALSE as peças pretas
 
-    /**
-     * Sets the field
-     * 
-     * @param file
-     * 
-     * @return field contains a game field with players discs
+    /*Cria o tabuleiro como uma matriz de tamanho fieldsize x fieldsize que no caso foi definida como 8, portanto a matriz 8x8,
+     *depois  define qual jogador começa a rodada inicial e por fim faz um loop FOR para definir as posições i,j de cada campo 
+     *da matriz do tabuleiro e retorna a matriz field usada para registrar as posições e salvar o jogo em outros métodos
      */
     public String[][] setField(String file)
     {
         String[] tempField = MyLibrary.getStringArray(file);
-        field = new String[FIELDSIZE][FIELDSIZE]; //initialise the 2d field array
+        field = new String[FIELDSIZE][FIELDSIZE]; 
         
-        //define who's turn it's supposed to be after the field loads
         String turn = tempField[0];
         firstTurn = Boolean.parseBoolean(turn);
         
-        //transform a 1d field array into a 2d field array
         for(int i = 0; i < FIELDSIZE; i++)
         {
             for(int j = 0; j < FIELDSIZE; j++)
@@ -44,10 +39,9 @@ public class Field
         return field;
     }
     
-    /**
-     * Returns who's turn it's supposed to be after the field loads
-     * 
-     * @return firstTurn represents the player who's turn it will be
+    /*Retorna o turno de quem deve jogar a seguir após a definição posicional do tabuleiro, ou seja,
+     *se o jogo for uma partida em andamento, carregada, esse retorno de valor indica qual dos jogadores
+     *será o próximo nessa rodada, ou também após cada rodada o campo sendo atualizado
      */
     public boolean getFirstTurn()
     {

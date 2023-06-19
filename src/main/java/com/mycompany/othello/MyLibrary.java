@@ -12,7 +12,12 @@ import java.util.ArrayList;
 /**
  * Contains methods to write to file or read from file, check file existence, get the list of files in a folder
  * 
- * @author Aleksejs Loginovs
+ * @author EDUARDO ANDRADE CARVALHO     - RA: 125111371662
+ * JHONATAS VIEIRA DA SILVA SANTOS 		- RA: 125111350221
+ * THIAGO REIS CARDOSO                	- RA: 125111366586
+ * RENATO RIBEIRO MELO FILHO         	- RA: 125111370411
+ * PITER MALHEIROS FANTI                - RA: 125111353595
+ * VICTÓRIA SOUZA DIAS                 	- RA: 12523157176
  */
 public class MyLibrary
 {
@@ -121,11 +126,7 @@ public class MyLibrary
         }
     }
     
-    /**
-     * Copies output file contents to an input file
-     * 
-     * @param fileName represents input and output file paths separated by the <> symbols
-     */
+    
     public static void duplicateFile(String fileName)
     {
        boolean[] fileExistent = new boolean[2];
@@ -188,12 +189,7 @@ public class MyLibrary
        }
     }
     
-    /**
-     * Saves an arrayList of values in a file
-     * 
-     * @param arrayToSave represents an ArrayList that is about to be stored in a file
-     * @param file represents a path to a file
-     */
+    
     public static void saveArrayList(ArrayList arrayToSave, String file)
     {
         //prints the ArrayList contents into a file
@@ -217,12 +213,7 @@ public class MyLibrary
         }
     }
     
-    /**
-     * Reads a file, stores its contents into an array and returns it
-     * 
-     * @param file represents a path to a file
-     * @return strArray represents an array of lines read from the file
-     */
+    
     public static String[] getStringArray(String file)
     {
         boolean existence = checkFileExistence(file);
@@ -335,11 +326,7 @@ public class MyLibrary
         }
     }
    
-    /**
-     * Asks user to input a new file name
-     * 
-     * @return newFileName represents a new file name
-     */
+    
     public static String getNewFileName()
     {
        Scanner newFileNameScan = new Scanner(System.in);
@@ -360,22 +347,15 @@ public class MyLibrary
        return new File(file).exists();
     }
 
-    /**
-     * Gets all of the file and folder names in the given folder
-     * 
-     * @param path represents a path for the folder to get file names from
-     * @return fileArrayInString represents the list of files in the given folder stored in one string and separated by '#'
-     */
-    public static String getFileNamesInFolder(String path)
-    {
-        String fileArrayInString = "";
-        
+    //Definir nome de arquivo para o jogo salvo
+    public static String[] getFileNamesInFolder(String path)
+    {      
         if (!checkFileExistence(path))
         {
             if (!path.equals("savedGames/"))
             {
                 System.out.println("Not exists folder: " + path);
-                return fileArrayInString;
+                return new String[0];
             }
 
             createFolder(path);
@@ -383,16 +363,14 @@ public class MyLibrary
         
         File folder = new File(path);
         File[] fileArray = folder.listFiles();
-        ArrayList<String> pathList = new ArrayList();
+        String[] filenames = new String[fileArray.length];
         
-        for (File file: fileArray)
+        for (int i= 0; i < fileArray.length; i++)
         {
-            pathList.add(file.getPath());
+        	filenames[i] = fileArray[i].getPath();
         }
         
-        fileArrayInString = String.join("#", pathList);
-        
-        return fileArrayInString;
+        return filenames;
     }
     
     public static boolean createFolder(String path) {
@@ -400,7 +378,7 @@ public class MyLibrary
     }
     
     public static boolean hasGameFileSaved() {
-        return !getFileNamesInFolder("savedGames/").equals("");
+        return getFileNamesInFolder("savedGames/").length > 0;
     }
     
 }

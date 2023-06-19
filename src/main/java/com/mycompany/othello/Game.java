@@ -9,8 +9,13 @@ import javax.swing.JOptionPane;
 
 /**
  * Contains methods regarding the flow of the game
- * 
- * @author Aleksejs Loginovs
+ *
+ * @author EDUARDO ANDRADE CARVALHO     - RA: 125111371662
+ * JHONATAS VIEIRA DA SILVA SANTOS 		- RA: 125111350221
+ * THIAGO REIS CARDOSO                	- RA: 125111366586
+ * RENATO RIBEIRO MELO FILHO         	- RA: 125111370411
+ * PITER MALHEIROS FANTI                - RA: 125111353595
+ * VICTÓRIA SOUZA DIAS                 	- RA: 12523157176
  */
 class Game
 {
@@ -68,8 +73,7 @@ class Game
      */
     public static void loadGame()
     {        
-        String files = MyLibrary.getFileNamesInFolder("savedGames/"); //stores the names of files in the 'savedGames' folder
-        String[] fileArray = files.split("#"); //splits passed file names into separate paths
+        String[] fileArray = MyLibrary.getFileNamesInFolder("savedGames/"); //splits passed file names into separate paths
         
         if(fileArray.length == 1 && fileArray[0].equals(""))
         {
@@ -118,7 +122,7 @@ class Game
         //gets the name of the file to save game to
         String file = currentFileGame;
         if (file == null) {
-        	String[] files = MyLibrary.getFileNamesInFolder("savedGames/").split("#");
+        	String[] files = MyLibrary.getFileNamesInFolder("savedGames/");
             file = "savedGames/file" + (files.length + 1) + ".txt";
         };
                     

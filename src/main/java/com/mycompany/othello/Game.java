@@ -19,7 +19,7 @@ import javax.swing.JOptionPane;
 /*Classe que processa o fluxo do jogo, nela iniciamos a matriz posicional do tabuleiro pelo DEFAULTFIELD com a blueprint de um tabuleiro
  *inicial com as peças brancas e pretas intercaladas no meio da matriz e com os outros campos zerados, depoisdefinimos o objeto de 
  *fieldObj como o tabuleiro e o field como suas posições, seguindo pelo indicador de jogador atual e o de troca de jogador para após um movimento.
- *O Scanner é definido para que receba os movimentos dos jogadores e o currentFileGame que nos permite salvar novo jogo ou sobreescrever o antigo.
+ *curPlayer TRUE define a vez das peças brancas jogarem, FALSE das peças pretas.
  */
 class Game
 {
@@ -31,10 +31,9 @@ class Game
     
     private static Field fieldObj = new Field();
     private static String[][] field;
-    private static boolean curPlayer = true; //true - current player is white, false - current player is black
+    private static boolean curPlayer = true; 
     private static boolean canChangePlayer = true;
-    private static Scanner regScan = new Scanner(System.in); //scanner that is used throughout the program
-    private static String winner = "UNDEFINED";  //as the game ends, stores the winner's colour
+    private static String winner = "UNDEFINED";  
     private static String currentFileGame = null;
     
     public static DisplayGame displayGame = new DisplayGame();
@@ -51,7 +50,6 @@ class Game
     public static void resetValues()
     {
         fieldObj = new Field();
-        regScan = new Scanner(System.in);
         curPlayer = true; 
         winner = "UNDEFINED"; 
         displayGame = new DisplayGame();
@@ -66,8 +64,8 @@ class Game
     {
     	currentFileGame = null;
     	
-        field = fieldObj.setField(DEFAULTFIELD);
-        curPlayer = fieldObj.getFirstTurn();
+        field = fieldObj.setField(DEFAULTFIELD); //Monta tabuleiro conforme blueprint de padrão de partida
+        curPlayer = fieldObj.getFirstTurn();	 //Define o primeiro turno
         gameFlow();
     }
     
@@ -75,41 +73,6 @@ class Game
      * iniciando o tabuleiro registrado no .txt, definindo o jogador do turno atual, baseado no último movimento
      * e deixando nulo o currentFileGame para poder criar um novo arquivo de jogo salvo
      */
-    public static void loadGame()
-    {        
-        String[] fileArray = MyLibrary.getFileNamesInFolder("savedGames/");
-        
-        //****************************************************************************
-        if(fileArray.length == 1 && fileArray[0].equals(""))
-        {
-            System.out.println("No available save files... (press ENTER to get back to the main menu)"); 
-            regScan.nextLine();
-            return;
-        }
-
-        System.out.println("Available save files:");    
-        //*****************************************************************************
-        
-        //****************************************************************************
-        for(int i = 0; i < fileArray.length; i++)       
-        {                                               
-            String temp = fileArray[i];                 
-            temp = temp.replace("savedGames\\", "");    
-            temp = temp.replace(".txt", "");            
-            System.out.println(temp);                   
-        }
-        
-        //******************************************************************************
-        System.out.println("\nWhich save file to load:");  
-        String fileToLoad = regScan.nextLine();
-        fileToLoad = "savedGames/" + fileToLoad + ".txt";
-        System.out.println(fileToLoad);
-        field = fieldObj.setField(fileToLoad);
-        curPlayer = fieldObj.getFirstTurn();
-        gameFlow();
-    }
-    
-    //****************************************************************************
     public static void loadFileGame(String fileToLoad) {
         System.out.println("fileToLoad: " + fileToLoad);
         currentFileGame = fileToLoad;
@@ -117,7 +80,11 @@ class Game
         curPlayer = fieldObj.getFirstTurn();
         gameFlow();
     }
-    //****************************************************************************
+    
+    /*Salva o jogo conforme disposiçãp da matriz do tabuleiro e vez do jogador atual.
+     *Também garante o nome padrão "file" + o número do arquivo novo atual, mas garantindoo que caso o jogo seja
+     *carregado ou já tenha sido salvo, será sobrescrito e não criado um novo
+     */
     public static void saveGame()
     {
         ArrayList<String> tempField = new ArrayList();
@@ -143,7 +110,7 @@ class Game
                 
         MyLibrary.saveArrayList(tempField,file);
         currentFileGame = file;
-        System.out.println("Game successfully saved. Filename: " + file);
+        System.out.println("Jogo salvo com sucesso. Filename: " + file);
         
         JOptionPane.showMessageDialog(null, "Jogo salvo com sucesso!", "Aviso", JOptionPane.INFORMATION_MESSAGE);
     }

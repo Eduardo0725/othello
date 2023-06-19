@@ -1,4 +1,4 @@
-package com.mycompany.othello;
+package com.mycompany.othello; //faz uso do pacote othello que compõe o projeto do jogo.
 
 /**
  * @author EDUARDO ANDRADE CARVALHO     - RA: 125111371662
@@ -10,10 +10,10 @@ package com.mycompany.othello;
  */
 
 //Classe que inicializa o jogo com seu método main
-public class Othello {
+public class Othello {  //Classe Othelo
 	
-    public static void main(String args[])
+    public static void main(String args[])  //Define método main
     {
-        Menu.main();
+        Menu.main();	//Chama o método main() da classe Menu para preparar o ambiente de Menu inicial
     }
 }

@@ -27,10 +27,10 @@ import javax.swing.border.EmptyBorder;
  */
 
 /*
- * Criação de classe para criar display da pontuação, dos botões 
+ * Classe para criar display da pontuação, dos botões 
  * e ícones em geral das peças, tabuleiro e outros
- * por meio da extensão JFrame da AWT importada anteriormente
- * usando os containeres
+ * por meio da extensão JFrame da AWT e Swing importadas anteriormente
+ * usando os containeres, cria as janelas do jogo
  */
 public class DisplayGame extends JFrame {
     

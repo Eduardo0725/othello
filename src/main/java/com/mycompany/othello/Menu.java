@@ -1,6 +1,7 @@
 package com.mycompany.othello;
 
 import java.awt.Container;
+import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
@@ -79,8 +80,8 @@ public class Menu extends JFrame {
         menuFrame.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
         menuFrame.setLocationRelativeTo(null);
         menuFrame.pack();
-//        menuFrame.setExtendedState(MAXIMIZED_BOTH);
-//        menuFrame.setResizable(false);
+        menuFrame.setExtendedState(MAXIMIZED_BOTH);
+        menuFrame.setResizable(false);
     }
     
     private void createComponents() {
@@ -107,7 +108,7 @@ public class Menu extends JFrame {
         title.setVerticalAlignment(SwingConstants.BOTTOM);
         containerGameFiles.add(title);
         
-        String[] files = MyLibrary.getFileNamesInFolder("savedGames/").split("#");
+        String[] files = MyLibrary.getFileNamesInFolder("savedGames/");
         gameFiles = new JComboBox(files);
         containerGameFiles.add(gameFiles);
     }
@@ -185,12 +186,29 @@ public class Menu extends JFrame {
     
     private void loadButtons() {
         containerButtons = new Container();
-        GridLayout layout = new GridLayout(menuFrame.buttons.size(), 1, 0, 15);
+        GridLayout layout = new GridLayout(1, 3, 0, 15);
         containerButtons.setLayout(layout);
-
-        menuFrame.buttons.forEach((button) -> {
-            containerButtons.add(button);
-        });
+        
+        Container[] containers = new Container[menuFrame.buttons.size()];
+        Container containerMain = new Container();
+        containerMain.setLayout(new GridLayout(3, 1, 0, 15));
+        
+        containerMain.setBounds(0, 0, 100, 20);
+        
+        for (int i = 0; i < menuFrame.buttons.size(); i++) {
+            containers[i] = new Container();
+            containers[i].setLayout(new GridLayout(1, 1));
+            containers[i].add(menuFrame.buttons.get(i));
+            containerMain.add(containers[i]);
+        }
+        
+        Container containerTest = new Container();
+        containerTest.setLayout(new FlowLayout());
+        containerTest.add(containerMain);
+        
+        containerButtons.add(new Container());
+        containerButtons.add(containerTest);
+        containerButtons.add(new Container());
 
         menuFrame.getContentPane().add(containerButtons);
     }
@@ -233,7 +251,7 @@ public class Menu extends JFrame {
     }
     
     private JButton changeButtonSize(JButton btn) {
-        int btnHeight = 25;
+        int btnHeight = 20;
         int btnWidth = 100;
 
         btn.setBorder(new EmptyBorder(btnHeight, btnWidth, btnHeight, btnWidth));

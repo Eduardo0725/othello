@@ -500,14 +500,20 @@ class Game
     public static void endGame()
     {
         winner = getWinner();
+        String message;
         
         if(winner.equals("tie"))
         {
             System.out.println("It's a tie!");
+            message = "Empate!";
         }
         else
         {
             System.out.println("Winner: " + winner + "!");
+            message = "O " + winner + " ganhou!";
+            
         }
+        
+        JOptionPane.showMessageDialog(null, message, "Fim de jogo!", JOptionPane.INFORMATION_MESSAGE);
     }
 }

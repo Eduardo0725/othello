@@ -36,7 +36,7 @@ class Game
     private static String winner = "UNDEFINED";  
     private static String currentFileGame = null;
     
-    public static DisplayGame displayGame = new DisplayGame();
+    public static DisplayGame displayGame = new DisplayGame();			//Cria a interface gráfica definida na classe DisplayGame();
     public static HashMap<String, Boolean> movesLeft = new HashMap();
     
     interface ForEachField {  
@@ -69,9 +69,9 @@ class Game
         gameFlow();
     }
     
-    /*Carrega o jogo salvo em formato de texto conforme classe Menu processando a escolha de jogo do usuário
-     * iniciando o tabuleiro registrado no .txt, definindo o jogador do turno atual, baseado no último movimento
-     * e deixando nulo o currentFileGame para poder criar um novo arquivo de jogo salvo
+    /*Carrega o jogo salvo em formato de texto retomando as posições da matriz do tabuleiro com suas respectivas peças e 
+     * definindo o turno do jogador atual, salvando o nome do arquivo no currentFileGame para que caso seja salvo novamente
+     * sobrescreva o arquivo ao invés de criar novos para a mesma partida
      */
     public static void loadFileGame(String fileToLoad) {
         System.out.println("fileToLoad: " + fileToLoad);
@@ -115,7 +115,7 @@ class Game
         JOptionPane.showMessageDialog(null, "Jogo salvo com sucesso!", "Aviso", JOptionPane.INFORMATION_MESSAGE);
     }
     
-    
+    //Define os contadores de peças brancas e pretas contando quantas ocorrências de cada há na matriz a cada rodada
     public static void setCounters()
     {
         resetScores();
@@ -132,42 +132,48 @@ class Game
         displayGame.setScore(false, "Black", scores[1]);
     }
     
+    //Redefine a pontuação para 0
     private static void resetScores() {
         scores[0] = 0;
         scores[1] = 0;
     }
 
-    
+    //Fecha o jogo saindo do sistema
     public static void closeGame()
     {
         System.exit(0);
     }
     
+    //Fluxo do jogo que carrega funções dos botões recebendo novas posições de peças na matriz e renovando os contadores
     public static void gameFlow() {
         loadFunctionsInButtons();
         reloadButtons();
         displayCounters();
     }
     
+    /*Processa se o movimento é válido para gravar a posição da nova jogada do jogador atual na matriz e 
+     * depois trocar o jogador para a próxima rodada dando display no console apenas para controle do backend do processo
+     */
     public static void setPart(int x, int y) {
         String userInput = convertNumberToCaracterPosition(y) + (x + 1);
         
-        System.out.println("Position: " + userInput);
+        System.out.println("Posição: " + userInput);				//Backend dando display no console
 
         if(!checkTurnInput(x, y) || !checkMoveLegal(userInput))
         {
-            System.out.println("INVALID MOVE");
+            System.out.println("Movimento inválido");				//Backend dando display no console
             return;
         }
 
-        displayGame.setIconWithType(x, y, curPlayer ? "w" : "b");
+        displayGame.setIconWithType(x, y, curPlayer ? "w" : "b");	//Define a peça naquele campo da matriz selecionado pelo jogador
 
-        curPlayer = !curPlayer;
+        curPlayer = !curPlayer;										//Troca a vez do jogador
 
-        reloadButtons();
-        displayCounters();
+        reloadButtons();											//Recarrega os botões
+        displayCounters();											//Redefine os contadores a cada jogada
     }
     
+    //Processa o backend da matriz para entendermos quais posições estão sendo alteradas no console antes da implementação da interface gráfica
     private static String convertNumberToCaracterPosition(int numberPosition) {
         switch (numberPosition) {
             case 0:
@@ -191,6 +197,7 @@ class Game
         return "UNDEFINED";
     }
     
+    //Processa o backend da matriz para entendermos quais posições estão sendo alteradas no console antes da implementação da interface gráfica
     private static int convertCaracterToNumberPosition(String charPosition) {
         switch (charPosition) {
             case "a": 
@@ -214,6 +221,7 @@ class Game
         return 10000;
     }
 
+    //Recarrega os botões considerando os novos valores da matriz do tabuleiro
     private static void reloadButtons() {
         forEachField((x, y) -> {
             if (field[x][y].equals("0")) {
@@ -236,6 +244,7 @@ class Game
         }
     }
     
+    //Carrega jogadas válidas para indicar possibilidade se se colocar uma peça a cada rodada e atualizar na matriz
     private static void loadLegalMovePositions() {
         ArrayList<String> moves = getAvailableMoves();
         
@@ -268,6 +277,7 @@ class Game
         });
     }
     
+    //Carrega as funções dos botões para atualizar a matriz do tabuleiro com a interface gráfica 
     private static void loadFunctionsInButtons() {
         for(int i = 0; i < field.length; i++)
         {
@@ -285,16 +295,17 @@ class Game
         }
     }
     
-    
+    //Mostra os contadores
     public static void displayCounters()
     {
         setCounters();
     }
-
+    
+    //Verifica se o campo selecionado é válido
     public static boolean checkTurnInput(int x, int y)
     {
         if (x < 0 || x > Field.FIELDSIZE || y < 0 || y > Field.FIELDSIZE) {
-            System.out.println("INVALID LETTER");
+            System.out.println("Campo inválido");
 
             return false;
         }
@@ -302,15 +313,14 @@ class Game
         return true;
     }
     
-    
+    //Verifica se o movimento é válido e registra caso seja
     public static boolean checkMoveLegal(String place)
     {
         String letter = place.substring(0,1).toLowerCase();
         int num = Integer.parseInt(place.substring(1,2));
         int letterNum = convertCaracterToNumberPosition(letter);
-        String playerColour = curPlayer ? "W" : "B"; //sets the current player's colour
+        String playerColour = curPlayer ? "W" : "B"; 			//Define qual jogador fez o movimento
 
-        //gets the coordinate value from the secon part of the string
         num -= 1;
 
         if(canPutDisc(field[num][letterNum]))
@@ -351,7 +361,7 @@ class Game
         return position.equals("0");
     }
     
-    
+    //Pega movimentos válidos para indicar a cada rodada
     public static ArrayList<String> getAvailableMoves()
     {
         ArrayList<String> moves = new ArrayList(); //stores the available moves
@@ -385,7 +395,7 @@ class Game
         return moves;
     }
     
-    
+    //Verifica se é formada a linha que valida o movimento
     public static boolean checkValidLineFormed(int vertPos, int horPos, String direction, String playerColor, String action)    
     {
         boolean lineFormed = false; 
@@ -463,7 +473,7 @@ class Game
                 }
                     
             }
-            
+            //Se a linha for formada, altera as peças do meio para a do jogador ativo
             if(lineFormed == true && action.equals("domove"))
             {
                 while(tempV != vertPos || tempH != horPos)
@@ -483,6 +493,7 @@ class Game
         return lineFormed;
     }
     
+    //Verifica qual o vencedor ao final do jogo
     public static String getWinner() {
         if(scores[1] > scores[0])
         {
@@ -497,6 +508,7 @@ class Game
         return "tie";
     }
     
+    //
     public static void endGame()
     {
         winner = getWinner();
@@ -504,12 +516,12 @@ class Game
         
         if(winner.equals("tie"))
         {
-            System.out.println("It's a tie!");
+            System.out.println("Empate!");
             message = "Empate!";
         }
         else
         {
-            System.out.println("Winner: " + winner + "!");
+            System.out.println("Vencedor: " + winner + "!");
             message = "O " + winner + " ganhou!";
             
         }

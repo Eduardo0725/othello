@@ -86,11 +86,11 @@ public class DisplayGame extends JFrame {
         JPanel panel = new JPanel();
         int borderSize = 15;
 
-        panel.setBorder(new EmptyBorder(borderSize, borderSize, borderSize, borderSize));
+        panel.setBorder(new EmptyBorder(borderSize, borderSize, borderSize, borderSize)); //define tamanhos de borda para o painel
 
-        this.setContentPane(panel);
-        FlowLayout layout = new FlowLayout();
-        layout.setAlignment(FlowLayout.LEFT);
+        this.setContentPane(panel);	
+        FlowLayout layout = new FlowLayout();			//Cria o layout do painel
+        layout.setAlignment(FlowLayout.LEFT);			//Alinha o painel à esquerda
         this.getContentPane().setLayout(layout);
     }
     
@@ -107,7 +107,7 @@ public class DisplayGame extends JFrame {
     	
     	JButton saveButton = new JButton("Salvar");
     	saveButton.addActionListener((ActionEvent evt) -> {
-    		Game.saveGame();
+    		Game.saveGame();								//Ao receber o evento de ser selecionado, chama o método de salvamento da classe Game
     	});
     	containerSaveButton.add(saveButton);
     	

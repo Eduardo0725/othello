@@ -17,9 +17,11 @@ import java.util.ArrayList;
  * PITER MALHEIROS FANTI                - RA: 125111353595
  * VICTÓRIA SOUZA DIAS                 	- RA: 12523157176
  */
+
+//Classe que armazena os processos e endereços dos arquivos que são chamados para compor a interface gráfica, criando nossa bilbioteca de endereços, ícones e imagens
 public class MyLibrary
 {
-    private static final String PATH_DEFAULT = "blueprint/fieldBlu.txt";
+    private static final String PATH_DEFAULT = "blueprint/fieldBlu.txt";	//define o caminho padrão da blueprint de tabuleiro padrão
     
     public static void readwriter(String action, String file)
     {
@@ -36,6 +38,7 @@ public class MyLibrary
         }
     }
     
+    //Gravação de arquivo para montar a matriz do arquivo de jogo salvo
     public static void writeInFile(String fileName)
     {
        String userInput;
@@ -58,10 +61,11 @@ public class MyLibrary
        }
        catch(IOException ex)
        {
-           System.out.println("Could not read the file. Error code RW-wIF-1");
+           System.out.println("Não foi possível ler o arquivo.");
        }
     }
    
+    //Leitura de arquivo de texto para carregamento, verificando sua existência e se seu arquivo pôde ser lido com êxito
     public static void readFromFile(String fileName)
     {
         if(checkFileExistence(fileName))
@@ -82,7 +86,7 @@ public class MyLibrary
            }
            catch(IOException ex)
            {
-               System.out.println("Ooops, something went wrong! Error code: ML-rFF-1");
+               System.out.println("Algo deu errado!");
            }
            finally
            {
@@ -92,24 +96,24 @@ public class MyLibrary
                }
                catch(IOException ex)
                {
-                   System.out.println("Could not close file");
+                   System.out.println("Não foi possível fechar o arquivo");
                }
            } 
         }
         else
         {
-           System.out.println("Such file doesn't exist.");
+           System.out.println("Arquivo não existe.");
            readFromFile(getNewFileName());
         }
     }
     
-    
+    //Verificação de nome de arquivo duplicado
     public static void duplicateFile(String fileName)
     {
        boolean[] fileExistent = new boolean[2];
        String copiedLine;
        
-       String[] file = fileName.split("<>"); //INPUT THEN OUTPUT
+       String[] file = fileName.split("<>"); 
        
        fileExistent[1] = checkFileExistence(file[1]);
        
@@ -135,7 +139,7 @@ public class MyLibrary
            }
            catch(IOException ex)
            {
-               System.out.println("File could not be read. Error code ML-DF-1");
+               System.out.println("Arquivo não pôde ser lido");
            }
            finally
            {
@@ -145,7 +149,7 @@ public class MyLibrary
                }
                catch(IOException ex)
                {
-                   System.out.println("Could not close file! Error code ML-DF-1");
+                   System.out.println("Não foi possível fechar o arquivo");
                }
                if(write != null)
                {
@@ -155,13 +159,13 @@ public class MyLibrary
        }
        else
        {
-           System.out.println("The output file doesn't exist. Error code ML-DF-3.");
+           System.out.println("O arquivo de output não pôde ser lido.");
            String newNames = file[0] + getNewFileName();
            duplicateFile(newNames);
        }
     }
     
-    
+    //Salva lista de Arrays para gravando a matriz do arquivo
     public static void saveArrayList(ArrayList arrayToSave, String file)
     {
         try
@@ -179,11 +183,11 @@ public class MyLibrary
         }
         catch(IOException ex)
         {
-            System.out.println("Ooops, there was some kind of an error. Error code: ML-SAL-01.");
+            System.out.println("Algo deu errado.");
         }
     }
     
-    
+    //Leitura da lista de arrays para guardar valores da matriz
     public static String[] getStringArray(String file)
     {
         boolean existence = checkFileExistence(file);
@@ -217,13 +221,13 @@ public class MyLibrary
             }
             catch(IOException ex)
             {
-                System.out.println("Could not read file. Error code ML-GSA-1.");
+                System.out.println("Arquivo não pôde ser lido.");
             }
 
             return strArray;
         }
 
-        System.out.println("Such file doesn't exist. Loading a default field instead.");
+        System.out.println("Arquivo inexistente. Carregando arquivo padrão.");
 
         try
         {
@@ -233,12 +237,13 @@ public class MyLibrary
         }
         catch (IOException e)
         {
-            System.out.println("An error occurred.");
+            System.out.println("Algo deu errado.");
         }
 
         return strArray;
     }
     
+    //Cria arquivo padrão de tabuleiro caso não exista (para receber blueprint)
     public static void createFileDefaultIfNotExists() throws IOException {
         File newFile = new File(PATH_DEFAULT);
         
@@ -257,6 +262,7 @@ public class MyLibrary
         saveArrayList(data, PATH_DEFAULT);
     }
 
+    //Pega dados iniciais do arquivo de salvamento para geração do tabuleiro base de início de jogo (blueprint)
     public static ArrayList<String> getInitialData() {
         ArrayList<String> data = new ArrayList();
 
@@ -273,11 +279,12 @@ public class MyLibrary
         return data;
     }
     
+    //Cria diretório padrão para blueprint
     public static void createFolderDefaultIfNotExists() {
         File folder = new File("blueprint");
         
         if (!folder.exists() && folder.mkdir()) {
-            System.out.println("Directory blueprint is created");
+            System.out.println("Diretório blueprint foi criado");
         }
     }
     
@@ -288,16 +295,16 @@ public class MyLibrary
         }
         catch(IOException ex)
         {
-            System.out.println("Could not close the file... Error code ML-GSA-2.");
+            System.out.println("Não foi possível fechar o arquivo.");
         }
     }
    
-    
+    //Teste de nome de arquivo pelo console (backend)
     public static String getNewFileName()
     {
        Scanner newFileNameScan = new Scanner(System.in);
        String newFileName;
-       System.out.println("Please, enter the correct file name:");
+       System.out.println("Por favor, insira o nome correto do arquivo:");
        newFileName = newFileNameScan.nextLine();
        return newFileName;
     }
@@ -313,7 +320,7 @@ public class MyLibrary
        return new File(file).exists();
     }
 
-    //Definir nome de arquivo para o jogo salvo
+    //Definir nome de arquivo para o jogo salvo pelo botão de salvar
     public static String[] getFileNamesInFolder(String path)
     {      
         if (!checkFileExistence(path))
@@ -339,10 +346,12 @@ public class MyLibrary
         return filenames;
     }
     
+    //Cria diretório de jogos salvos
     public static boolean createFolder(String path) {
         return new File(path).mkdir();
     }
     
+    //Pega o nome dos arquivos salvos no diretório
     public static boolean hasGameFileSaved() {
         return getFileNamesInFolder("savedGames/").length > 0;
     }

@@ -17,11 +17,21 @@ import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
 /**
- * Contains the main method & methods to display/process main menu
+ * @author EDUARDO ANDRADE CARVALHO     - RA: 125111371662
+ * JHONATAS VIEIRA DA SILVA SANTOS 		- RA: 125111350221
+ * THIAGO REIS CARDOSO                	- RA: 125111366586
+ * RENATO RIBEIRO MELO FILHO         	- RA: 125111370411
+ * PITER MALHEIROS FANTI                - RA: 125111353595
+ * VICTÓRIA SOUZA DIAS                 	- RA: 12523157176
+ */
+
+/*Classe responsável por criar o menu principal do jogo
+ *define seu painel, os containeres de botões e arquivos salvos do jogo,
+ *e os botões de opções do menu, para iniciar o jogo, carregar ou sair.
  */
 public class Menu extends JFrame {
 
-    public static Menu menuFrame;
+    public static Menu menuFrame;		//Objeto menuFrame, que inicia os componentes e configurações da janela de menu
     
     private JPanel panel;
     private Container containerButtons;
@@ -37,23 +47,24 @@ public class Menu extends JFrame {
     {
         menuFrame = new Menu();
 
-        menuFrame.createComponents();
-        menuFrame.prepareConfigurations();
+        menuFrame.createComponents();		//Método de preparação de componentes, como botões, título, e painel
+        menuFrame.prepareConfigurations();	//Prepara configurações de fechamento, posicionamento e redimensionamento do painel
 
-        menuFrame.setVisible(true);
+        menuFrame.setVisible(true);			//Deixa visível a janela de menu
     }
     
+    //Processa a escolha de usuário entre as opções do menu: Iniciar Novo Jogo; Carregar Jogo; Sair do Jogo 
     public static void processUserChoice(String userChoice)
     {
         menuFrame.setVisible(false);
 
-        switch(userChoice)
+        switch(userChoice)			//Processa dependendo da escolha do botão selecionado, chamando a função respectiva da classe Game
         {
             case "startGame":
                 Game.startGame();
                 break;
             case "loadGame":
-                changeGameFileVisible(true);
+                changeGameFileVisible(true);	//Caso loadGame, torna visível lista de arquivos de jogo salvos para selecionar no menu de carregamento
                 break;
             case "closeGame":
                 Game.closeGame();
@@ -63,6 +74,10 @@ public class Menu extends JFrame {
         }
     }
     
+    /*Define quais Containeres serão removídos ou adicionados conforme arquivos e botões de containerGameFiles e containerButtons.
+     *É ativado quando for carregar um jogo salvo, habilitando a lista de arquivos.txt para escolha do jogador retomar a partida
+     *tornando-a visível.
+     */
     private static void changeGameFileVisible(boolean show) {
         Container containerToRemove = !show ? menuFrame.containerGameFiles : menuFrame.containerButtons;
         Container containerToAdd = show ? menuFrame.containerGameFiles : menuFrame.containerButtons;
@@ -76,6 +91,9 @@ public class Menu extends JFrame {
         menuFrame.setVisible(true);
     }
     
+    /*Prepara configurações do painel da janela de menu, habilitando fechamento, redimensionamento ou não,
+     * minimização da janela e posição inicial da mesma.
+     */
     private void prepareConfigurations() {
         menuFrame.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
         menuFrame.setLocationRelativeTo(null);
@@ -84,6 +102,9 @@ public class Menu extends JFrame {
         menuFrame.setResizable(false);
     }
     
+    /*Prepara componentes do painel da janela de menu, criando o painel, o título e botões além dos componentes de arquivo do jogo
+     * que serão vistos apenas no menu de carregamento
+     */
     private void createComponents() {
         createPanel();
         
@@ -93,16 +114,18 @@ public class Menu extends JFrame {
         createFileGameComponent();
     }
     
+    //Cria componentes do menu de carregamento de arquivo do jogo alterando o menu para as opções de carregamento
     private void createFileGameComponent() {
         containerGameFiles = new Container();
         containerGameFiles.setLayout(new GridLayout(5, 1, 0, 15));
         
         createFilenameListComboBox();
-        createButtonStartGame();
+        createButtonConfirmLoadGame();
         createButtonBackFileGame();
         createButtonChooseFileGame();
     }
     
+    //Cria lista de arquivos salvos para o usuário selecionar o jogo salvo
     private void createFilenameListComboBox() {
         JLabel title = new JLabel("Selecione um arquivo de jogo:");
         title.setVerticalAlignment(SwingConstants.BOTTOM);
@@ -113,7 +136,8 @@ public class Menu extends JFrame {
         containerGameFiles.add(gameFiles);
     }
     
-    private void createButtonStartGame() {
+    //Cria o botão de carregar o jogo selecionado do menu de carregamento de arquivo
+    private void createButtonConfirmLoadGame() {
         buttonStartFileGame = new JButton("Carregar arquivo selecionado");
         buttonStartFileGame.addActionListener((ActionEvent e) -> {
             String filename = gameFiles.getSelectedItem().toString();
@@ -126,6 +150,7 @@ public class Menu extends JFrame {
         containerGameFiles.add(buttonStartFileGame);
     }
     
+    //Cria o botão de voltar ao menu principal
     private void createButtonBackFileGame() {
         buttonBackFileGame = new JButton("Voltar");
         buttonBackFileGame.addActionListener((ActionEvent e) -> {
@@ -134,6 +159,7 @@ public class Menu extends JFrame {
         containerGameFiles.add(buttonBackFileGame);
     }
     
+    //Cria o botão de confirmar o carregamento do jogo selecionado
     private void createButtonChooseFileGame() {
         buttonChooseFileGame = new JButton("Escolher arquivo");
         buttonChooseFileGame.addActionListener((ActionEvent e) -> {
@@ -142,6 +168,7 @@ public class Menu extends JFrame {
         containerGameFiles.add(buttonChooseFileGame);
     }
     
+    //Processo de carregamento do arquivo de jogo selecionado após confirmar o arquivo
     private static void openFile() {
         JFileChooser chooser = new JFileChooser();
         
@@ -154,6 +181,7 @@ public class Menu extends JFrame {
         }
     }
     
+    //Cria o painel chamado no método createComponents() para a janela do menu
     private void createPanel() {
         panel = new JPanel();
         int borderSize = 50;
@@ -164,14 +192,16 @@ public class Menu extends JFrame {
         menuFrame.getContentPane().setLayout(new GridLayout(2, 1));
     }
     
+    //Cria os botões chamados no método createComponents() para opções do menu principal
     private void createButtons() {
-        createButtonSaveGame();
+        createButtonStartGame();
         createButtonLoadGame();
         createButtonCloseGame();
 
         loadButtons();
     }
     
+    //Cria o título do menu principal, o nome do jogo "Othello", com alinhammento central e fonte Bold em tamanho 30
     private void createTitle() {
         JLabel title = new JLabel("Othello");
         title.setHorizontalAlignment(SwingConstants.CENTER);
@@ -184,6 +214,7 @@ public class Menu extends JFrame {
         menuFrame.getContentPane().add(containerTitle);
     }
     
+    //Carrega os botões do Menu principal criados anteriormente, para mostrá-los na janela do menu
     private void loadButtons() {
         containerButtons = new Container();
         GridLayout layout = new GridLayout(1, 3, 0, 15);
@@ -213,10 +244,12 @@ public class Menu extends JFrame {
         menuFrame.getContentPane().add(containerButtons);
     }
     
-    private void createButtonSaveGame() {
+    //Define botão de iniciar o jogo chamado no menu principal antes da partida
+    private void createButtonStartGame() {
         menuFrame.buttons.add(createButton("Iniciar novo jogo", "startGame"));
     }
 
+    //Define botão de carregar o jogo que leva ao menu de carregamento de arquivos de jogo salvos
     private void createButtonLoadGame() {
         JButton btn = createButton("Carregar jogo", "loadGame");
         
@@ -227,10 +260,12 @@ public class Menu extends JFrame {
         menuFrame.buttons.add(btn);
     }
 
+    //Define botão de sair do jogo no menu principal
     private void createButtonCloseGame() {
         menuFrame.buttons.add(createButton("Sair", "closeGame"));
     }
     
+    //Prepara eventos de botões, indicando o que cada botão faz conforme valores retornados pelo JButton selecionado no menu
     private JButton createButton(String text, String actionName) {
         JButton btn = new JButton(text);
 
@@ -240,6 +275,7 @@ public class Menu extends JFrame {
         return btn;
     }
     
+    //Dimensiona altura, largura e bordas do botão retornando um botão
     private JButton prepareEventButton(JButton btn, String actionName) {
         btn.setActionCommand(actionName);
         btn.addActionListener((ActionEvent evt) -> {
@@ -250,6 +286,7 @@ public class Menu extends JFrame {
         return btn;
     }
     
+    //Desabilita botões na troca de menu principal para de carregamento e no processo inverso
     private JButton changeButtonSize(JButton btn) {
         int btnHeight = 20;
         int btnWidth = 100;

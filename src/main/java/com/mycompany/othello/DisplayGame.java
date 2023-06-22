@@ -122,6 +122,7 @@ public class DisplayGame extends JFrame {
     	this.getContentPane().add(containerSaveButton);   	
     }
     
+    //Cria o botão de sair da partida, salvando-a automaticamente e retornando ao menu principal do jogo
     private void createBackButton() {
     	JButton backButton = new JButton("Sair");
     	backButton.addActionListener((ActionEvent evt) -> {

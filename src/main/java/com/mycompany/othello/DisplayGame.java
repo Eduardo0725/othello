@@ -7,7 +7,6 @@ import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.EventListener;
 
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
@@ -18,12 +17,12 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 /**
- * @author EDUARDO ANDRADE CARVALHO     - RA: 125111371662
- * JHONATAS VIEIRA DA SILVA SANTOS 		- RA: 125111350221
- * THIAGO REIS CARDOSO                	- RA: 125111366586
- * RENATO RIBEIRO MELO FILHO         	- RA: 125111370411
- * PITER MALHEIROS FANTI                - RA: 125111353595
- * VICTÓRIA SOUZA DIAS                 	- RA: 12523157176
+ * @author EDUARDO ANDRADE CARVALHO - RA: 125111371662
+ * JHONATAS VIEIRA DA SILVA SANTOS  - RA: 125111350221
+ * THIAGO REIS CARDOSO              - RA: 125111366586
+ * RENATO RIBEIRO MELO FILHO        - RA: 125111370411
+ * PITER MALHEIROS FANTI            - RA: 125111353595
+ * VICTÓRIA SOUZA DIAS              - RA: 12523157176
  */
 
 /*
@@ -61,10 +60,18 @@ public class DisplayGame extends JFrame {
      *habilita fechamento da janela, define o tamanho da mesma, centraliza a janela, etc
      */
     private void prepareConfigurations() {
-        this.setVisible(true);
         this.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
         this.setSize(800, 800);
         this.setLocationRelativeTo(null);
+        this.setVisible(true);
+    }
+    
+    public void showDisplay() {
+        this.setVisible(true);
+    }
+    
+    public void hiddenDisplay() {
+        this.setVisible(false);
     }
     
     /*
@@ -77,6 +84,7 @@ public class DisplayGame extends JFrame {
         createScoreboard();
         createButtons();
         createSaveButton();
+        createBackButton();
     }
     
     /*Cria o painel com seu tamanho de borda e o layout pronto para 
@@ -107,11 +115,19 @@ public class DisplayGame extends JFrame {
     	
     	JButton saveButton = new JButton("Salvar");
     	saveButton.addActionListener((ActionEvent evt) -> {
-    		Game.saveGame();								//Ao receber o evento de ser selecionado, chama o método de salvamento da classe Game
+            Game.saveGame();								//Ao receber o evento de ser selecionado, chama o método de salvamento da classe Game
     	});
     	containerSaveButton.add(saveButton);
     	
     	this.getContentPane().add(containerSaveButton);   	
+    }
+    
+    private void createBackButton() {
+    	JButton backButton = new JButton("Sair");
+    	backButton.addActionListener((ActionEvent evt) -> {
+            Game.backToMenuAndSaveGame();								//Ao receber o evento de ser selecionado, chama o método que volta para o menu
+    	});
+    	containerSaveButton.add(backButton);
     }
 
     //Cria a tabela de score para cada jogador, define a fonte e tamanho da escrita

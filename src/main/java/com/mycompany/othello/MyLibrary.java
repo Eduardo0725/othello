@@ -10,12 +10,12 @@ import java.util.Scanner;
 import java.util.ArrayList;
 
 /**
- * @author EDUARDO ANDRADE CARVALHO     - RA: 125111371662
- * JHONATAS VIEIRA DA SILVA SANTOS 		- RA: 125111350221
- * THIAGO REIS CARDOSO                	- RA: 125111366586
- * RENATO RIBEIRO MELO FILHO         	- RA: 125111370411
- * PITER MALHEIROS FANTI                - RA: 125111353595
- * VICTÓRIA SOUZA DIAS                 	- RA: 12523157176
+ * @author EDUARDO ANDRADE CARVALHO - RA: 125111371662
+ * JHONATAS VIEIRA DA SILVA SANTOS  - RA: 125111350221
+ * THIAGO REIS CARDOSO              - RA: 125111366586
+ * RENATO RIBEIRO MELO FILHO        - RA: 125111370411
+ * PITER MALHEIROS FANTI            - RA: 125111353595
+ * VICTÓRIA SOUZA DIAS              - RA: 12523157176
  */
 
 //Classe que armazena os processos e endereços dos arquivos que são chamados para compor a interface gráfica, criando nossa bilbioteca de endereços, ícones e imagens
@@ -354,6 +354,18 @@ public class MyLibrary
     //Pega o nome dos arquivos salvos no diretório
     public static boolean hasGameFileSaved() {
         return getFileNamesInFolder("savedGames/").length > 0;
+    }
+    
+    public static boolean deleteFile(String filename) {
+        File file = new File(filename);
+        
+        if (file.exists() && file.delete())
+        {
+            System.out.println("File " + filename + " deleted.");
+            return true;
+        }
+        
+        return false;
     }
     
 }

@@ -1,6 +1,5 @@
 package com.mycompany.othello;
 
-import java.util.Scanner;
 import java.util.HashMap;
 import java.util.ArrayList;
 import java.awt.event.ActionEvent;
@@ -8,12 +7,12 @@ import javax.swing.JButton;
 import javax.swing.JOptionPane;
 
 /**
- * @author EDUARDO ANDRADE CARVALHO     - RA: 125111371662
- * JHONATAS VIEIRA DA SILVA SANTOS 		- RA: 125111350221
- * THIAGO REIS CARDOSO                	- RA: 125111366586
- * RENATO RIBEIRO MELO FILHO         	- RA: 125111370411
- * PITER MALHEIROS FANTI                - RA: 125111353595
- * VICTÓRIA SOUZA DIAS                 	- RA: 12523157176
+ * @author EDUARDO ANDRADE CARVALHO - RA: 125111371662
+ * JHONATAS VIEIRA DA SILVA SANTOS  - RA: 125111350221
+ * THIAGO REIS CARDOSO              - RA: 125111366586
+ * RENATO RIBEIRO MELO FILHO        - RA: 125111370411
+ * PITER MALHEIROS FANTI            - RA: 125111353595
+ * VICTÓRIA SOUZA DIAS              - RA: 12523157176
  */
 
 /*Classe que processa o fluxo do jogo, nela iniciamos a matriz posicional do tabuleiro pelo DEFAULTFIELD com a blueprint de um tabuleiro
@@ -62,6 +61,7 @@ class Game
      */
     public static void startGame()
     {
+        displayGame.showDisplay();
     	currentFileGame = null;
     	
         field = fieldObj.setField(DEFAULTFIELD); //Monta tabuleiro conforme blueprint de padrão de partida
@@ -74,6 +74,7 @@ class Game
      * sobrescreva o arquivo ao invés de criar novos para a mesma partida
      */
     public static void loadFileGame(String fileToLoad) {
+        displayGame.showDisplay();
         System.out.println("fileToLoad: " + fileToLoad);
         currentFileGame = fileToLoad;
         field = fieldObj.setField(fileToLoad);
@@ -91,7 +92,7 @@ class Game
 
         String file = currentFileGame;
         if (file == null) {
-        	String[] files = MyLibrary.getFileNamesInFolder("savedGames/");
+            String[] files = MyLibrary.getFileNamesInFolder("savedGames/");
             file = "savedGames/file" + (files.length + 1) + ".txt";
         };
                     
@@ -523,9 +524,53 @@ class Game
         {
             System.out.println("Vencedor: " + winner + "!");
             message = "O " + winner + " ganhou!";
-            
         }
         
         JOptionPane.showMessageDialog(null, message, "Fim de jogo!", JOptionPane.INFORMATION_MESSAGE);
+        
+        deleteCurrentFileIfExists();
+        backToMenu();
     }
+    
+    private static void deleteCurrentFileIfExists() {
+        if (currentFileGame != null && MyLibrary.deleteFile(currentFileGame))
+        {
+            System.out.print("File " + currentFileGame + " deleted.");
+        }
+    }
+    
+    public static void backToMenuAndSaveGame() {
+        if (currentFileGame == null)
+        {
+            Object[] buttons = {"Sim", "Não"};
+
+            int option = JOptionPane.showOptionDialog(
+                    null, 
+                    "Deseja salvar o jogo?", 
+                    "Atenção", 
+                    JOptionPane.YES_NO_OPTION, 
+                    JOptionPane.QUESTION_MESSAGE, 
+                    null, 
+                    buttons, 
+                    buttons[0]
+            );
+
+            if (option == JOptionPane.YES_OPTION)
+            {
+                Game.saveGame();
+            }
+        }
+        else
+        {
+            Game.saveGame();
+        }
+
+        backToMenu();
+    }
+    
+    public static void backToMenu() {
+        displayGame.hiddenDisplay();
+        Menu.openMenu();
+    }
+
 }

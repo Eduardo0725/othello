@@ -17,12 +17,12 @@ import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
 /**
- * @author EDUARDO ANDRADE CARVALHO     - RA: 125111371662
- * JHONATAS VIEIRA DA SILVA SANTOS 		- RA: 125111350221
- * THIAGO REIS CARDOSO                	- RA: 125111366586
- * RENATO RIBEIRO MELO FILHO         	- RA: 125111370411
- * PITER MALHEIROS FANTI                - RA: 125111353595
- * VICTÓRIA SOUZA DIAS                 	- RA: 12523157176
+ * @author EDUARDO ANDRADE CARVALHO - RA: 125111371662
+ * JHONATAS VIEIRA DA SILVA SANTOS  - RA: 125111350221
+ * THIAGO REIS CARDOSO              - RA: 125111366586
+ * RENATO RIBEIRO MELO FILHO        - RA: 125111370411
+ * PITER MALHEIROS FANTI            - RA: 125111353595
+ * VICTÓRIA SOUZA DIAS              - RA: 12523157176
  */
 
 /*Classe responsável por criar o menu principal do jogo
@@ -43,8 +43,7 @@ public class Menu extends JFrame {
 
     private final ArrayList<JButton> buttons = new ArrayList();
     
-    public static void main()
-    {
+    public static void main() {
         menuFrame = new Menu();
 
         menuFrame.createComponents();		//Método de preparação de componentes, como botões, título, e painel
@@ -54,8 +53,7 @@ public class Menu extends JFrame {
     }
     
     //Processa a escolha de usuário entre as opções do menu: Iniciar Novo Jogo; Carregar Jogo; Sair do Jogo 
-    public static void processUserChoice(String userChoice)
-    {
+    public static void processUserChoice(String userChoice) {
         menuFrame.setVisible(false);
 
         switch(userChoice)			//Processa dependendo da escolha do botão selecionado, chamando a função respectiva da classe Game
@@ -74,6 +72,11 @@ public class Menu extends JFrame {
         }
     }
     
+    public static void openMenu() {
+        changeGameFileVisible(false);
+        menuFrame.setVisible(true);
+    }
+    
     /*Define quais Containeres serão removídos ou adicionados conforme arquivos e botões de containerGameFiles e containerButtons.
      *É ativado quando for carregar um jogo salvo, habilitando a lista de arquivos.txt para escolha do jogador retomar a partida
      *tornando-a visível.
@@ -87,6 +90,11 @@ public class Menu extends JFrame {
         
         menuFrame.getContentPane().revalidate();
         menuFrame.getContentPane().repaint();
+        
+        if (show)
+        {
+            menuFrame.updateFilenameListInComboBox();
+        }
         
         menuFrame.setVisible(true);
     }
@@ -125,14 +133,25 @@ public class Menu extends JFrame {
         createButtonChooseFileGame();
     }
     
+    private void updateFilenameListInComboBox() {
+        String[] files = MyLibrary.getFileNamesInFolder("savedGames/");
+
+        gameFiles.removeAllItems();
+
+        for (int i = 0; i < files.length; i++)
+        {
+            gameFiles.addItem(files[i]);
+        }
+    }
+    
     //Cria lista de arquivos salvos para o usuário selecionar o jogo salvo
     private void createFilenameListComboBox() {
         JLabel title = new JLabel("Selecione um arquivo de jogo:");
         title.setVerticalAlignment(SwingConstants.BOTTOM);
         containerGameFiles.add(title);
         
-        String[] files = MyLibrary.getFileNamesInFolder("savedGames/");
-        gameFiles = new JComboBox(files);
+        gameFiles = new JComboBox();
+        
         containerGameFiles.add(gameFiles);
     }
     
